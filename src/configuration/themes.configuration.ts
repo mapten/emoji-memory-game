@@ -11,7 +11,7 @@ export const themes: Record<ThemeId, Theme> = {
     name: 'Spring',
     kind: 'season',
     icon: '🌸',
-    emojis: ['🌸', '🌷', '🌼', '🌻', '🌱', '🌿', '🍀', '🐝', '🦋', '🐞', '🐛', '🐌',
+    emojis: ['🌳', '🌷', '🌼', '🌻', '🌱', '🌿', '🍀', '🐝', '🦋', '🐞', '🐛', '🐌',
       '🐸', '🐤', '🪺', '🌈', '☔', '🌦️', '🪴', '🐑', '🌺', '🍓', '🐦', '🪁'],
     colors: {
       primary: '#2E6B3F',
@@ -27,7 +27,7 @@ export const themes: Record<ThemeId, Theme> = {
     name: 'Summer',
     kind: 'season',
     icon: '☀️',
-    emojis: ['☀️', '🏖️', '🌊', '🏄', '🍉', '🍦', '🍹', '🕶️', '👙', '🩴', '🐚', '🦀',
+    emojis: ['🏐', '🏖️', '🌊', '🏄', '🍉', '🍦', '🍹', '🕶️', '👙', '🩴', '🐚', '🦀',
       '🐠', '🐬', '🌴', '⛱️', '🍍', '🥥', '🚤', '⛵', '🏝️', '🦩', '🍧', '🤿'],
     colors: {
       primary: '#0B5E7E',
@@ -43,7 +43,7 @@ export const themes: Record<ThemeId, Theme> = {
     name: 'Autumn',
     kind: 'season',
     icon: '🍂',
-    emojis: ['🍁', '🍂', '🍄', '🌰', '🦔', '🐿️', '🍎', '🍐', '🍇', '🌾', '🥧', '☕',
+    emojis: ['🍁', '🥜', '🍄', '🌰', '🦔', '🐿️', '🍎', '🍐', '🍇', '🌾', '🥧', '☕',
       '🧣', '🦉', '🌽', '🍠', '🦃', '🪵', '🌧️', '☂️', '🧥', '🥾', '🍯', '🦊'],
     colors: {
       primary: '#8C2F14',
@@ -59,7 +59,7 @@ export const themes: Record<ThemeId, Theme> = {
     name: 'Winter',
     kind: 'season',
     icon: '❄️',
-    emojis: ['❄️', '☃️', '⛄', '🌨️', '⛷️', '🏂', '⛸️', '🧤', '🧣', '🎿', '🏔️', '🐧',
+    emojis: ['🏒', '☃️', '⛄', '🌨️', '⛷️', '🏂', '⛸️', '🧤', '🧣', '🎿', '🏔️', '🐧',
       '🐻‍❄️', '🦭', '🫖', '☕', '🍲', '🔥', '🧊', '🛷', '🥶', '🌬️', '🧦', '🐺'],
     colors: {
       primary: '#3D4F8C',
@@ -75,7 +75,7 @@ export const themes: Record<ThemeId, Theme> = {
     name: 'Christmas',
     kind: 'holiday',
     icon: '🎄',
-    emojis: ['🎅', '🎄', '❄️', '🎁', '🥂', '🌠', '☃️', '⛄',
+    emojis: ['🎅', '🔔', '❄️', '🎁', '🥂', '🌠', '☃️', '⛄',
       '🫎', '🌨️', '🤶', '🧑‍🎄', '🎉', '💫', '🧦', '🥛',
       '🧝‍♀️', '🌟', '🍪', '🦌', '🕯️', '👼', '🥳', '🎊'],
     colors: {
@@ -92,7 +92,7 @@ export const themes: Record<ThemeId, Theme> = {
     name: 'Halloween',
     kind: 'holiday',
     icon: '🎃',
-    emojis: ['🎃', '👻', '🦇', '🕷️', '🕸️', '🧙‍♀️', '🧛', '🧟', '💀', '☠️', '🍬', '🍭',
+    emojis: ['😈', '👻', '🦇', '🕷️', '🕸️', '🧙‍♀️', '🧛', '🧟', '💀', '☠️', '🍬', '🍭',
       '🐈‍⬛', '🌕', '🔮', '🪦', '🧹', '🕯️', '🦉', '🐺', '👽', '🤡', '🧪', '🪄'],
     colors: {
       primary: '#4B1D6B',
@@ -108,7 +108,7 @@ export const themes: Record<ThemeId, Theme> = {
     name: 'Easter',
     kind: 'holiday',
     icon: '🐣',
-    emojis: ['🐰', '🐇', '🥚', '🐣', '🐥', '🐤', '🌷', '🌼', '🧺', '🍫', '🐑', '🌸',
+    emojis: ['🐰', '🐇', '🥚', '🐝', '🐥', '🐤', '🌷', '🌼', '🧺', '🍫', '🐑', '🌸',
       '🦋', '🪺', '🐔', '🥕', '🎀', '⛪', '🕊️', '🌱', '🍞', '🧁', '🎨', '🌈'],
     colors: {
       primary: '#6B4FA0',
