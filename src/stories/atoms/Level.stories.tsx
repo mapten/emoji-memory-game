@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 // Components
-import { Level } from "../../components/presentational/Level/Level";
+import { Level } from '../../components/presentational/Level/Level';
 
 const meta = {
   title: 'Atoms/Level',
@@ -13,7 +13,7 @@ type Story = StoryObj<typeof meta>;
 export const Easy = {
   args: {
     level: {
-      name: "Easy",
+      name: 'Easy',
       verticalCards: 4,
       horizontalCards: 4,
     },
@@ -25,7 +25,7 @@ export const Easy = {
 export const Medium = {
   args: {
     level: {
-      name: "Medium",
+      name: 'Medium',
       verticalCards: 6,
       horizontalCards: 4,
     },

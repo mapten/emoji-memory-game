@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 // Components
-import { TimeCounter } from "../../components/presentational/TimeCounter/TimeCounter";
+import { TimeCounter } from '../../components/presentational/TimeCounter/TimeCounter';
 
 const meta = {
   title: 'Atoms/TimeCounter',

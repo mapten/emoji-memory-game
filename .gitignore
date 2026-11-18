@@ -24,3 +24,12 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# build output
+/dist
+/storybook-static
+
+# editors
+/.vscode/*
+!/.vscode/extensions.json
+*.log

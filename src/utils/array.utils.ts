@@ -11,14 +11,14 @@
 export const getRandomSubarray = (array: string[], itemCount: number): string[] => {
   // Check if the requested number of items is greater than the array length
   if (itemCount > array.length) {
-    throw new Error("Number of items requested is greater than the array length.");
+    throw new Error('Number of items requested is greater than the array length.');
   }
 
   const shuffledArray = shuffleArray(array);
 
   // Return a subarray of the specified number of items
   return shuffledArray.slice(0, itemCount);
-}
+};
 
 /**
  * Shuffles an array using the Fisher-Yates algorithm.
@@ -36,4 +36,4 @@ export const shuffleArray = (array: string[]): string[] => {
   }
 
   return copyArray;
-}
+};

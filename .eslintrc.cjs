@@ -6,7 +6,9 @@ module.exports = {
   'extends': [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:react/recommended'
+    'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
+    'plugin:storybook/recommended'
   ],
   'overrides': [
     {
@@ -21,6 +23,12 @@ module.exports = {
       }
     }
   ],
+  'settings': {
+    'react': {
+      'version': 'detect'
+    }
+  },
+  'ignorePatterns': ['dist', 'storybook-static', 'node_modules'],
   'parser': '@typescript-eslint/parser',
   'parserOptions': {
     'ecmaVersion': 'latest',
@@ -32,7 +40,7 @@ module.exports = {
   ],
   'rules': {
     'indent': [
-      'warning',
+      'warn',
       2
     ],
     'quotes': [

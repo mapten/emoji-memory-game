@@ -5,8 +5,8 @@ import { BackToLevelSelection } from './BackToLevelSelection';
 
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', () => ({
-  ...vi.importActual('react-router-dom') as any,
- useNavigate: () => mockNavigate
+  ...vi.importActual<typeof import('react-router-dom')>('react-router-dom'),
+  useNavigate: () => mockNavigate
 }));
 
 describe('BackToLevelSelection', () => {

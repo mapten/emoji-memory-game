@@ -1,4 +1,4 @@
-import { Level } from "../models/level.model";
+import { Level } from '../models/level.model';
 
 export const emojis = ['🎅', '🎄', '❄️', '🎁', '🥂', '🌠', '☃️', '⛄',
   '🫎', '🌨️', '🤶', '🧑‍🎄', '🎉', '💫', '🧦', '🥛',

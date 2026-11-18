@@ -10,7 +10,7 @@ const meta = {
 
 export const Default = {
   args: {
-    children: "Hello world",
+    children: 'Hello world',
     onClose: () => {},
   },
 };

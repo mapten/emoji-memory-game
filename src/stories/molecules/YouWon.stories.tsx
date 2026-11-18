@@ -15,7 +15,7 @@ export const Default = {
 
     return (<div>
       <button className="bg-gray-400 rounded-md p-2 mb-4" onClick={() => setShow(true)}>Open modal</button>
-      { show && <YouWon onClose={() => setShow(false)} onStartAgain={() => console.log("start again")} /> }
+      { show && <YouWon onClose={() => setShow(false)} onStartAgain={() => console.log('start again')} /> }
     </div>);
   }
 };

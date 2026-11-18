@@ -11,7 +11,7 @@ export const GameOver = ({ onClose, onStartAgain }: Props) => {
   const startAgainHandler = () => {
     onStartAgain();
     onClose();
-  }
+  };
 
   return (
     <Modal onClose={onClose}>

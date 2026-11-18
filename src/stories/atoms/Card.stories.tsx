@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
 // Components
-import { Card } from "../../components/presentational/Card/Card";
+import { Card } from '../../components/presentational/Card/Card';
 
 const meta = {
   title: 'Atoms/Card',
@@ -27,7 +27,7 @@ export const ResetCards = {
     const handleReset = () => {
       setCardLeftShowBack(true);
       setCardRightShowBack(true);
-    }
+    };
 
     return (<div>
       <button className="bg-gray-400 rounded-md p-2 mb-4" onClick={handleReset}>Reset cards</button>

@@ -1,4 +1,4 @@
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Fragment, createRef, useEffect, useState } from 'react';
 
 // Configuration
@@ -37,11 +37,11 @@ export const Game = () => {
 
   const disableAllCards = () => {
     setCards((updatedCards) => updatedCards.map((c) => ({...c, isDisabled: true})));
-  }
+  };
 
   const flipAllCards = () => {
     setCards((updatedCards) => updatedCards.map((c) => ({...c, isFlipped: true})));
-  }
+  };
 
   const cardClickHandle = (card: CardState) => {
     if (card.isMatched || card.isDisabled) return;
@@ -53,7 +53,7 @@ export const Game = () => {
           ...c,
           isFlipped: true,
           isDisabled: true,
-        }
+        };
       }
       return c;
     });
@@ -80,7 +80,7 @@ export const Game = () => {
               ...c,
               isMatched: true,
               isDisabled: true,
-            }
+            };
           }
           return c;
         });
@@ -95,7 +95,7 @@ export const Game = () => {
         return {
           ...c,
           isDisabled: true,
-        }
+        };
       });
       setCards(disabledCards);
 
@@ -114,30 +114,30 @@ export const Game = () => {
         setCards(flippedCardsReset);
       }, gameConfiguration.flipBackTime);
     }
-  }
+  };
 
   const timeUpHandler = () => {
     setShowGameOver(true);
     disableAllCards();
-  }
+  };
 
   const startAgainHandler = () => {
     initializeCards(difficulty as string);
     timeCounterRef.current?.restartCountdown();
     setMoveCount(0);
-  }
+  };
 
   const showSolutionHandler = () => {
     disableAllCards();
     flipAllCards();
     timeCounterRef.current?.stop();
-  }
+  };
 
   const youWonHandler = () => {
     setShowYouWon(true);
     disableAllCards();
     timeCounterRef.current?.stop();
-  }
+  };
 
 
   const initializeCards = (difficulty: string) => {
@@ -159,7 +159,7 @@ export const Game = () => {
     }));
 
     setCards(newCards);
-  }
+  };
 
   useEffect(() => {
     if (!difficulty) return;
@@ -177,7 +177,7 @@ export const Game = () => {
   const horizontalCards = screenOrientation === 'landscape' ? level.horizontalCards : level.verticalCards;
 
   return (
-    <div className="flex p-2 md:p-4 xl:p-8 h-screen w-screen overflow-hidden" style={{flexDirection: screenOrientation === "landscape" ? "row" : "column"}}>
+    <div className="flex p-2 md:p-4 xl:p-8 h-screen w-screen overflow-hidden" style={{flexDirection: screenOrientation === 'landscape' ? 'row' : 'column'}}>
       <div className="flex flex-col gap-2 lg:gap-8 mb-2 md:mr-4 lg:mr-8">
         <GamePanel
           ref={timeCounterRef}
@@ -204,4 +204,4 @@ export const Game = () => {
       { showYouWon && <YouWon onClose={() => setShowYouWon(false)} onStartAgain={startAgainHandler} />}
     </div>
   );
-}
+};

@@ -1,4 +1,4 @@
-import { render, fireEvent, screen, waitFor, act } from '@testing-library/react';
+import { render, fireEvent, screen, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 // Components
@@ -22,7 +22,7 @@ describe('GamePanel', () => {
   });
 
   const renderUI = (props: Partial<Props> = {}) => {
-    return render(<MemoryRouter initialEntries={[`/test?difficulty=easy`]}>
+    return render(<MemoryRouter initialEntries={['/test?difficulty=easy']}>
       <GamePanel {...baseProps} {...props} />
     </MemoryRouter>);
   };

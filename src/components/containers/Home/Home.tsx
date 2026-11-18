@@ -10,10 +10,10 @@ export const Home = () => {
 
   const startGameHandler = () => {
     navigate('/select-difficulty');
-  }
+  };
 
   return (
-    <div className="h-screen w-screen bg-cover bg-[url('src/assets/images/background.svg')]">
+    <div className="h-screen w-screen bg-cover bg-[url('/background.svg')]">
       <div className="flex flex-col opacity-100 items-center justify-center h-full p-4">
         <div className="bg-[rgba(255,255,255,0.9)] p-4 lg:p-8 rounded-3xl">
           <div className="text-3xl lg:text-6xl text-primary">
@@ -33,4 +33,4 @@ export const Home = () => {
       </div>
     </div>
   );
-}
+};

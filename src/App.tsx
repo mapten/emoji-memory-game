@@ -1,32 +1,32 @@
 import {
   createBrowserRouter,
   RouterProvider,
-} from "react-router-dom";
+} from 'react-router-dom';
 
 // Components
-import { Home } from "./components/containers/Home/Home";
-import { DifficultyLevelSelector } from "./components/containers/DifficultyLevelSelector/DifficultyLevelSelector";
-import { Game } from "./components/containers/Game/Game";
+import { Home } from './components/containers/Home/Home';
+import { DifficultyLevelSelector } from './components/containers/DifficultyLevelSelector/DifficultyLevelSelector';
+import { Game } from './components/containers/Game/Game';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Home />
   },
   {
-    path: "/select-difficulty",
+    path: '/select-difficulty',
     element: <DifficultyLevelSelector />
   },
   {
-    path: "/game",
+    path: '/game',
     element: <Game />
   },
 ]);
 
 export const App = () => {
   return (
-    <div className="bg-cover bg-[url('src/assets/images/background.svg')]">
+    <div className="bg-cover bg-[url('/background.svg')]">
       <RouterProvider router={router} />
     </div>
   );
-}
+};

@@ -1,11 +1,11 @@
 // Components
-import { Ref, forwardRef } from "react";
-import { Button } from "../../ui/Button/Button";
-import { BackToLevelSelection } from "../BackToLevelSelection/BackToLevelSelection";
-import { MoveCounter } from "../MoveCounter/MoveCounter";
-import { RemainingPairsCounter } from "../RemainingPairsCounter/RemainingPairsCounter";
-import { TimeCounter, TimeCounterRefType } from "../TimeCounter/TimeCounter";
-export type { TimeCounterRefType } from "../TimeCounter/TimeCounter";
+import { Ref, forwardRef } from 'react';
+import { Button } from '../../ui/Button/Button';
+import { BackToLevelSelection } from '../BackToLevelSelection/BackToLevelSelection';
+import { MoveCounter } from '../MoveCounter/MoveCounter';
+import { RemainingPairsCounter } from '../RemainingPairsCounter/RemainingPairsCounter';
+import { TimeCounter, TimeCounterRefType } from '../TimeCounter/TimeCounter';
+export type { TimeCounterRefType } from '../TimeCounter/TimeCounter';
 
 type Props = {
   moves: number;
@@ -30,4 +30,5 @@ export const GamePanel = forwardRef(({moves, remainingPairs, onTimeUp, onStartAg
       <RemainingPairsCounter remainingPairs={remainingPairs} />
     </div>
   </>);
-})
+});
+GamePanel.displayName = 'GamePanel';

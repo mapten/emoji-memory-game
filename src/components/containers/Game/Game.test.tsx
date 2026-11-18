@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import '@testing-library/jest-dom';
 import * as arrayUtils from '../../../utils/array.utils';
 
-import { render, fireEvent, screen, waitFor, act, within } from '@testing-library/react';
+import { render, fireEvent, screen, act, within } from '@testing-library/react';
 import { Game } from './Game';
 import { MemoryRouter } from 'react-router-dom';
 

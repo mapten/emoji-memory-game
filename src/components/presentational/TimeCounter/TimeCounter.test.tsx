@@ -65,7 +65,7 @@ describe('TimeCounter', () => {
   
       const handleRestart = () => {
         componentRef.current?.restartCountdown();
-      }
+      };
   
       return (<>
         <button data-testid="restart" onClick={handleRestart}>Restart timer</button>
@@ -73,7 +73,7 @@ describe('TimeCounter', () => {
           <TimeCounter ref={componentRef} onTimeUp={vi.fn()} />
         </div>
       </>);
-    }
+    };
 
     render(<Wrapper />);
 
@@ -98,7 +98,7 @@ describe('TimeCounter', () => {
   
       const handleStop = () => {
         componentRef.current?.stop();
-      }
+      };
   
       return (<>
         <button data-testid="stop" onClick={handleStop}>Restart timer</button>
@@ -106,7 +106,7 @@ describe('TimeCounter', () => {
           <TimeCounter ref={componentRef} onTimeUp={vi.fn()} />
         </div>
       </>);
-    }
+    };
 
     render(<Wrapper />);
 

@@ -49,9 +49,10 @@ export const TimeCounter = forwardRef(({onTimeUp}: Props, ref: Ref<TimeCounterRe
   return (
     <div data-testid="time-counter" className="flex justify-between">
       <div className="text-primary whitespace-nowrap">🛎️ Time left:</div>
-      <div className={`${counter > 19 ? "text-quaternary" : "text-red"}`}>
+      <div className={`${counter > 19 ? 'text-quaternary' : 'text-red'}`}>
         {counter}
       </div>
     </div>
   );
 });
+TimeCounter.displayName = 'TimeCounter';
