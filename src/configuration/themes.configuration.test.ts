@@ -20,6 +20,11 @@ describe('themes configuration', () => {
     expect(theme.emojis.length).toBeGreaterThanOrEqual(maxPairs);
   });
 
+  it.each(Object.values(themes))('$name should not use its card back icon as a card emoji', (theme) => {
+    // A face-up card showing the back icon would look like a face-down card.
+    expect(theme.emojis).not.toContain(theme.icon);
+  });
+
   it.each(Object.values(themes))('$name should define every colour as hex', (theme) => {
     Object.values(theme.colors).forEach((color) => expect(color).toMatch(/^#[0-9A-F]{6}$/i));
   });
