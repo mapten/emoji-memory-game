@@ -1,0 +1,94 @@
+/* ================================================================================================
+ * Halloween background. Parts: #halloween-sky, #halloween-stars, #halloween-moon,
+ * #halloween-clouds, #halloween-bats, #halloween-hills, #halloween-haunted-house,
+ * #halloween-windows, #halloween-ghost, #halloween-graveyard, #halloween-dead-tree,
+ * #halloween-spider, #halloween-bushes, #halloween-eyes, #halloween-pumpkins, #halloween-fog,
+ * #halloween-embers.
+ * ============================================================================================= */
+
+#halloween-background {
+  --sky-top: #120824;
+  --sky-middle: #3A1656;
+  --sky-bottom: #9A4470;
+  --moon: #FFE9A8;
+  --silhouette: #1A0C29;
+  --window-off: #2A1238;
+  --window-on: #FFB627;
+  --window-frame: #1A0C29;
+  --candle: #FFD166;
+  --ember: #FFB347;
+  --eyes: #E8F55A;
+}
+
+#halloween-background .sky-top { stop-color: var(--sky-top); }
+#halloween-background .sky-middle { stop-color: var(--sky-middle); }
+#halloween-background .sky-bottom { stop-color: var(--sky-bottom); }
+#halloween-background .moon-disc { fill: var(--moon); }
+#halloween-stars { fill: #FFF4D6; }
+#halloween-moon .moon-glow { --pulse-duration: 5s; }
+
+#halloween-background .cloud { fill: #2A1242; opacity: 0.85; }
+
+/* Silhouettes */
+#halloween-background .bat,
+#halloween-background .haunted-house > path,
+#halloween-background .dead-tree > path:first-child,
+#halloween-background .bushes,
+#halloween-background .spider { fill: var(--silhouette); stroke: var(--silhouette); }
+#halloween-background .spider-thread { stroke: #B9A6D6; opacity: 0.6; }
+#halloween-background .fence { stroke: #140920; fill: none; }
+#halloween-background .fence-picket { fill: #140920; }
+#halloween-background .tombstone { fill: #4A3D5C; }
+#halloween-background .tombstone-engraving { stroke: #35294A; stroke-width: 4; fill: none; }
+
+/* The ghost slowly fades in and out while it floats. */
+#halloween-ghost .ghost-body {
+  animation: halloween-ghost-fade 7s ease-in-out infinite;
+}
+
+@keyframes halloween-ghost-fade {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 0.35; }
+}
+
+/* Candle light inside the pumpkins: irregular flicker. */
+#halloween-background .pumpkin-light {
+  fill: var(--candle);
+  animation: halloween-candle 1.8s ease-in-out infinite;
+}
+
+#halloween-background .pumpkin-glow {
+  animation: halloween-candle 1.8s ease-in-out infinite;
+}
+
+@keyframes halloween-candle {
+  0%, 100% { opacity: 1; }
+  20% { opacity: 0.75; }
+  35% { opacity: 0.95; }
+  60% { opacity: 0.6; }
+  80% { opacity: 0.9; }
+}
+
+/* Haunted windows switch on and off faster than normal houses. */
+#halloween-windows .window-lit { --window-cycle: 9s; }
+
+/* Eyes in the bushes blink now and then. */
+#halloween-background .eyes {
+  fill: var(--eyes);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: halloween-blink 5s ease-in-out infinite;
+}
+
+@keyframes halloween-blink {
+  0%, 44%, 52%, 100% { transform: scaleY(1); }
+  48% { transform: scaleY(0.1); }
+  70%, 82% { opacity: 1; }
+  76% { opacity: 0; }
+}
+
+/* Embers rising from the pumpkins. */
+#halloween-background .ember { fill: var(--ember); }
+#halloween-embers { opacity: 0.75; }
+
+#halloween-fog { opacity: 0.9; }

@@ -1,0 +1,14 @@
+.themed-background-layer {
+  position: absolute;
+  inset: 0;
+}
+
+/* A new theme's background fades in over the previous one. */
+.themed-background-layer.is-entering {
+  animation: themed-background-fade-in 1.2s ease-in-out both;
+}
+
+@keyframes themed-background-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

@@ -1,0 +1,53 @@
+/* ================================================================================================
+ * Winter background. Parts: #winter-sky, #winter-sun, #winter-clouds, #winter-mountains,
+ * #winter-far-forest, #winter-hills, #winter-lake, #winter-cabin, #winter-windows,
+ * #winter-chimney-smoke, #winter-pines, #winter-bare-tree, #winter-snowman, #winter-scarf,
+ * #winter-snow-glints, #winter-snowfall (#winter-snow-far, -middle, -near).
+ * ============================================================================================= */
+
+#winter-background {
+  --sky-top: #B9B3E8;
+  --sky-middle: #CFCFF6;
+  --sky-bottom: #E6E9FF;
+  --sun: #FFFFFF;
+  --cloud: #F4F3FF;
+  --snow: #FFFFFF;
+  --window-off: #4A3B5C;
+  --window-on: #FFD58A;
+  --window-frame: #5A2A1E;
+}
+
+#winter-background .sky-top { stop-color: var(--sky-top); }
+#winter-background .sky-middle { stop-color: var(--sky-middle); }
+#winter-background .sky-bottom { stop-color: var(--sky-bottom); }
+#winter-background .sun-disc { fill: var(--sun); opacity: 0.9; }
+#winter-background .cloud { fill: var(--cloud); opacity: 0.6; }
+
+/* Snow: the farther the layer, the smaller, slower and paler (depth effect). */
+#winter-background .snowflake { fill: var(--snow); }
+#winter-background .snowflake--crystal {
+  fill: none;
+  stroke: var(--snow);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+#winter-snow-far { opacity: 0.55; }
+#winter-snow-middle { opacity: 0.85; }
+#winter-snow-near { opacity: 0.95; }
+
+/* Snow glints sparkle on the ground. */
+#winter-snow-glints { fill: #FFFFFF; }
+
+/* A glint of light sweeps slowly over the frozen lake. */
+#winter-lake .ice-shine {
+  animation: winter-ice-shine 9s ease-in-out infinite;
+}
+
+@keyframes winter-ice-shine {
+  0% { transform: skewX(-30deg) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  60% { transform: skewX(-30deg) translateX(1150px); opacity: 1; }
+  70%, 100% { transform: skewX(-30deg) translateX(1150px); opacity: 0; }
+}
+
+#winter-chimney-smoke { opacity: 0.9; }

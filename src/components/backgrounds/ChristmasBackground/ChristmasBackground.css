@@ -1,0 +1,117 @@
+/* ================================================================================================
+ * Christmas background. Parts: #christmas-sky, #christmas-stars, #christmas-bright-stars,
+ * #christmas-moon, #christmas-santa, #christmas-hills, #christmas-forest, #christmas-village
+ * (#christmas-house-1..4, each with .house-windows and .light-string), #christmas-lamps,
+ * #christmas-tree (#christmas-tree-lights, #christmas-ornaments, #christmas-star,
+ * #christmas-presents), #christmas-foreground, #christmas-snow-glints, #christmas-snowfall.
+ * ============================================================================================= */
+
+#christmas-background {
+  /* Night sky */
+  --sky-top: #0B1635;
+  --sky-middle: #1E2F5E;
+  --sky-bottom: #42578F;
+  --moon: #FFF6D8;
+  --star: #FFFFFF;
+  /* Windows */
+  --window-off: #2C2F4F;
+  --window-on: #FFD27A;
+  --window-frame: #3B2330;
+  /* Christmas lights */
+  --bulb-red: #FF5A5F;
+  --bulb-gold: #FFD166;
+  --bulb-green: #5DD39E;
+  --bulb-blue: #5BC0EB;
+  --light-cycle: 2.8s;      /* duration of one on/off blink */
+  --light-chase-step: 0.7s; /* delay between the 4 chase phases: creates the "running" lights */
+  /* Santa */
+  --santa: #16204A;
+  --santa-rim: rgba(255, 238, 190, 0.45);
+  --santa-cycle: 46s;       /* Santa crosses the sky once per cycle */
+}
+
+#christmas-background .sky-top { stop-color: var(--sky-top); }
+#christmas-background .sky-middle { stop-color: var(--sky-middle); }
+#christmas-background .sky-bottom { stop-color: var(--sky-bottom); }
+#christmas-background .moon-disc { fill: var(--moon); }
+#christmas-stars,
+#christmas-bright-stars { fill: var(--star); }
+#christmas-background .roof-snow { fill: #F4F7FF; }
+#christmas-background .snowflake { fill: #FFFFFF; }
+#christmas-snow-far { opacity: 0.6; }
+#christmas-snow-glints { fill: #FFFFFF; }
+
+/* ---------- Christmas lights: each bulb fades in and out, one after the other ------------------ */
+
+#christmas-background .light-wire {
+  fill: none;
+  stroke: #1D2B22;
+  stroke-width: 2;
+}
+
+#christmas-background .bulb--red { --bulb-color: var(--bulb-red); }
+#christmas-background .bulb--gold { --bulb-color: var(--bulb-gold); }
+#christmas-background .bulb--green { --bulb-color: var(--bulb-green); }
+#christmas-background .bulb--blue { --bulb-color: var(--bulb-blue); }
+
+#christmas-background .bulb-glass { fill: var(--bulb-color); }
+
+/*
+ * Bulbs are grouped in 4 chase phases (`.bulb-phase`, index in --phase): each phase blinks a quarter of
+ * a cycle after the previous one, so the light seems to run along the wires.
+ */
+#christmas-background .bulb-phase {
+  animation: christmas-bulb var(--light-cycle) ease-in-out calc(var(--phase, 0) * var(--light-chase-step) * -1) infinite;
+}
+
+@keyframes christmas-bulb {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+/* ---------- Tree star ------------------------------------------------------------------------ */
+
+#christmas-star .star-shape {
+  fill: #FFD166;
+  stroke: #FFF3C4;
+  stroke-width: 2;
+}
+
+#christmas-star .star-rays {
+  fill: #FFE9A8;
+  opacity: 0.45;
+  --spin-duration: 24s;
+}
+
+#christmas-star .star-glow { --pulse-duration: 2.5s; }
+
+/* ---------- Santa's sleigh: crosses in front of the moon, then waits off-screen ---------------- */
+
+/* Dark silhouette with a thin moonlit rim, so it also reads against the night sky. */
+#christmas-santa .santa-silhouette {
+  fill: var(--santa);
+  stroke: var(--santa-rim);
+  stroke-width: 1.2;
+  paint-order: stroke;
+}
+#christmas-santa .santa-silhouette path[fill="none"] { fill: none; stroke: var(--santa); }
+
+#christmas-santa {
+  animation: christmas-santa-flight var(--santa-cycle) linear -14s infinite;
+}
+
+@keyframes christmas-santa-flight {
+  0% { transform: translate(-420px, 60px); }
+  42% { transform: translate(1900px, -40px); }
+  100% { transform: translate(1900px, -40px); }
+}
+
+#christmas-santa .trail-sparkle {
+  fill: #FFE08A;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bg-twinkle 0.6s ease-in-out infinite alternate;
+}
+
+#christmas-santa .trail-sparkle:nth-child(even) { animation-delay: -0.3s; }
+

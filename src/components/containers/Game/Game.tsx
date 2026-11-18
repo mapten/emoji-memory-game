@@ -1,8 +1,8 @@
 import { useLocation } from 'react-router-dom';
-import { Fragment, createRef, useEffect, useState } from 'react';
+import { Fragment, createRef, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 // Configuration
-import { emojis, gameConfiguration, levels } from '../../../configuration/game.configuration';
+import { gameConfiguration, levels } from '../../../configuration/game.configuration';
 // Models
 import { CardState } from '../../../models/cardState.model';
 import { Level as LevelModel } from '../../../models/level.model';
@@ -10,6 +10,7 @@ import { Level as LevelModel } from '../../../models/level.model';
 import { getRandomSubarray, shuffleArray } from '../../../utils/array.utils';
 // Hooks
 import { useScreenOrientation } from '../../../hooks/useScreenOrientation';
+import { useActiveTheme } from '../../../hooks/useActiveTheme';
 // Components
 import { Card } from '../../presentational/Card/Card';
 import { GamePanel, TimeCounterRefType } from '../../presentational/GamePanel/GamePanel';
@@ -28,6 +29,7 @@ export const Game = () => {
   const difficulty = queryParams.get('difficulty');
 
   const screenOrientation = useScreenOrientation();
+  const theme = useActiveTheme();
   const [cards, setCards] = useState<CardState[]>([]);
   const [level, setLevel] = useState<LevelModel>(levels[0]);
   const [moveCount, setMoveCount] = useState<number>(0);
@@ -43,11 +45,40 @@ export const Game = () => {
     setCards((updatedCards) => updatedCards.map((c) => ({...c, isFlipped: true})));
   };
 
-  const cardClickHandle = (card: CardState) => {
-    if (card.isMatched || card.isDisabled) return;
+  // Timer that turns a wrong pair face down again (null when no wrong pair is displayed).
+  const flipBackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const cancelFlipBack = () => {
+    if (flipBackTimer.current) {
+      clearTimeout(flipBackTimer.current);
+      flipBackTimer.current = null;
+    }
+  };
+
+  /** Turns the wrong pair face down and makes every unmatched card playable again. */
+  const turnWrongPairBack = (list: CardState[]): CardState[] => list.map((c) => {
+    if (c.isMatched || (!c.isFlipped && !c.isDisabled && !c.feedback)) return c; // unchanged: not re-rendered
+    return { ...c, isFlipped: false, isDisabled: false, feedback: undefined };
+  });
+
+  const cardClickHandle = (cardId: string) => {
+    let currentCards = cards;
+
+    // A wrong pair is still displayed: the player has already started the next move,
+    // so turn the pair back right away instead of ignoring the click.
+    if (flipBackTimer.current) {
+      cancelFlipBack();
+      currentCards = turnWrongPairBack(currentCards);
+    }
+
+    const card = currentCards.find((c) => c.id === cardId);
+    if (!card || card.isMatched || card.isDisabled) {
+      if (currentCards !== cards) setCards(currentCards);
+      return;
+    }
 
     // Flip the selected card, and disable it
-    const updatedCards = cards.map((c) => {
+    const updatedCards = currentCards.map((c) => {
       if (c.id === card.id) {
         return {
           ...c,
@@ -74,12 +105,15 @@ export const Game = () => {
 
           return remainingPairsAfterMatch;
         });
+        const pairIds = flippedCards.map((c) => c.id);
         const matchedCards = updatedCards.map((c) => {
-          if (c.isFlipped) {
+          if (pairIds.includes(c.id)) {
             return {
               ...c,
               isMatched: true,
               isDisabled: true,
+              // The two cards of the pair celebrate (bounce).
+              feedback: 'match' as const,
             };
           }
           return c;
@@ -89,45 +123,48 @@ export const Game = () => {
         return;
       }
 
-      // If the cards don't match, flip them back after 1 second.
-      // Disable all cards while the cards are flipped back.
-      const disabledCards = updatedCards.map((c) => {
-        return {
-          ...c,
-          isDisabled: true,
-        };
-      });
-      setCards(disabledCards);
+      // If the cards don't match, they shake, then flip back after `flipBackTime`.
+      // Both stay disabled meanwhile; the other cards remain playable (clicking one turns the pair back at once).
+      const wrongPairIds = flippedCards.map((c) => c.id);
+      setCards(updatedCards.map((c) => (wrongPairIds.includes(c.id) ? { ...c, feedback: 'mismatch' as const } : c)));
 
-      setTimeout(() => {
-        const flippedCardsReset = updatedCards.map((c) => {
-          const modifiedCard = {...c};
-          if (c.isFlipped && !c.isMatched) {
-            modifiedCard.isFlipped = false;
-          }
-          if (!c.isMatched) {
-            modifiedCard.isDisabled = false;
-          }
-          return modifiedCard;
-        });
-
-        setCards(flippedCardsReset);
+      flipBackTimer.current = setTimeout(() => {
+        flipBackTimer.current = null;
+        setCards((current) => turnWrongPairBack(current));
       }, gameConfiguration.flipBackTime);
     }
   };
 
+  // Stable click handler per card, so a click re-renders only the cards that change (Card is memoized).
+  const latestCardClickHandle = useRef(cardClickHandle);
+  useLayoutEffect(() => {
+    latestCardClickHandle.current = cardClickHandle;
+  });
+  const deckKey = cards.map((c) => c.id).join('|');
+  const cardClickHandlers = useMemo(
+    () => new Map(cards.map((c) => [c.id, () => latestCardClickHandle.current(c.id)])),
+    [deckKey],
+  );
+
+  // No wrong pair left to turn back once the game screen is closed.
+  useEffect(() => cancelFlipBack, []);
+
   const timeUpHandler = () => {
+    cancelFlipBack();
     setShowGameOver(true);
     disableAllCards();
   };
 
   const startAgainHandler = () => {
+    // A wrong pair of the previous board must not be turned back on the new one.
+    cancelFlipBack();
     initializeCards(difficulty as string);
     timeCounterRef.current?.restartCountdown();
     setMoveCount(0);
   };
 
   const showSolutionHandler = () => {
+    cancelFlipBack();
     disableAllCards();
     flipAllCards();
     timeCounterRef.current?.stop();
@@ -146,7 +183,8 @@ export const Game = () => {
 
     setRemainingPairs(pairs);
 
-    const selectedEmojis = getRandomSubarray(emojis, pairs);
+    // Cards are drawn from the emojis of the active theme (season or holiday).
+    const selectedEmojis = getRandomSubarray(theme.emojis, pairs);
 
     const shuffledEmojis = shuffleArray([...selectedEmojis, ...selectedEmojis]);
 
@@ -173,6 +211,17 @@ export const Game = () => {
     setLevel(level);
   }, [difficulty]);
 
+  // When the theme changes during a game (picked by the player, or a new period starting),
+  // deal a fresh board with the new theme's emojis.
+  const dealtThemeId = useRef(theme.id);
+  useEffect(() => {
+    if (dealtThemeId.current === theme.id) return;
+    dealtThemeId.current = theme.id;
+    if (!difficulty) return;
+
+    startAgainHandler();
+  }, [theme.id]);
+
   const verticalCards = screenOrientation === 'landscape' ? level.verticalCards : level.horizontalCards;
   const horizontalCards = screenOrientation === 'landscape' ? level.horizontalCards : level.verticalCards;
 
@@ -194,9 +243,11 @@ export const Game = () => {
           <Fragment key={card.id}>
             <Card
               emoji={card.emoji}
+              backIcon={theme.icon}
+              feedback={card.feedback}
               disabled={card.isDisabled}
               initialShowBack={!card.isFlipped}
-              onClick={() => cardClickHandle(card)} />
+              onClick={cardClickHandlers.get(card.id) as () => void} />
           </Fragment>
         ))}
       </div>

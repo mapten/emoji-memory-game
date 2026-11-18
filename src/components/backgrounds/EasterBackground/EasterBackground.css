@@ -1,0 +1,94 @@
+/* ================================================================================================
+ * Easter background. Parts: #easter-sky, #easter-sun, #easter-rainbow, #easter-clouds,
+ * #easter-butterflies, #easter-hills, #easter-flowers, #easter-bunny, #easter-eggs,
+ * #easter-hatching-egg, #easter-basket, #easter-petals.
+ * ============================================================================================= */
+
+#easter-background {
+  --sky-top: #BDE3FF;
+  --sky-middle: #E3F3FF;
+  --sky-bottom: #FFF0F6;
+  --sun: #FFF1A8;
+  --cloud: #FFFFFF;
+  --bunny: #FBF8F6;
+  --bunny-shade: #EFE8E4;
+  --bunny-ear: #FFC6D9;
+}
+
+#easter-background .sky-top { stop-color: var(--sky-top); }
+#easter-background .sky-middle { stop-color: var(--sky-middle); }
+#easter-background .sky-bottom { stop-color: var(--sky-bottom); }
+#easter-background .sun-disc { fill: var(--sun); }
+#easter-background .cloud { fill: var(--cloud); opacity: 0.9; }
+
+/* The rainbow slowly shimmers. */
+#easter-rainbow {
+  animation: easter-rainbow 8s ease-in-out infinite alternate;
+}
+
+@keyframes easter-rainbow {
+  from { opacity: 0.45; }
+  to { opacity: 0.85; }
+}
+
+/* Bunny */
+#easter-bunny .bunny-fur { fill: var(--bunny); }
+#easter-bunny .bunny-shade { fill: var(--bunny-shade); }
+#easter-bunny .bunny-ear-inner { fill: var(--bunny-ear); }
+
+/* Every few seconds the front ear twitches... */
+#easter-bunny .bunny-ear--front {
+  transform-box: fill-box;
+  transform-origin: 30% 100%;
+  animation: easter-ear-twitch 5s ease-in-out infinite;
+}
+
+@keyframes easter-ear-twitch {
+  0%, 70%, 100% { transform: rotate(0); }
+  75% { transform: rotate(14deg); }
+  80% { transform: rotate(-4deg); }
+  85% { transform: rotate(10deg); }
+  90% { transform: rotate(0); }
+}
+
+/* ...and the nose wiggles. */
+#easter-bunny .bunny-nose {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: easter-nose 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes easter-nose {
+  from { transform: scale(1); }
+  to { transform: scale(1.25, 0.85); }
+}
+
+/* Some eggs wobble, as if something were about to hatch. */
+#easter-eggs .egg-wobble {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: easter-egg-wobble 4s ease-in-out infinite;
+}
+
+@keyframes easter-egg-wobble {
+  0%, 60%, 100% { transform: rotate(0); }
+  66% { transform: rotate(-8deg); }
+  74% { transform: rotate(7deg); }
+  82% { transform: rotate(-4deg); }
+  90% { transform: rotate(0); }
+}
+
+/* A chick peeks out of its shell, looks around and hides again. */
+/* Negative delay: the first frame (also the one shown when animations are paused) has the chick peeking out. */
+#easter-hatching-egg .chick {
+  animation: easter-chick-peek 7s ease-in-out -2.4s infinite;
+}
+
+@keyframes easter-chick-peek {
+  0%, 15% { transform: translateY(46px); }
+  30%, 38% { transform: translateY(0) rotate(0); }
+  44% { transform: translateY(0) rotate(-6deg); }
+  52% { transform: translateY(0) rotate(6deg); }
+  60%, 66% { transform: translateY(0) rotate(0); }
+  80%, 100% { transform: translateY(46px); }
+}

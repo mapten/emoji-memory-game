@@ -1,23 +1,56 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/*
+ * Tailwind CSS v4, configured in CSS (no tailwind.config / postcss.config): it runs as a Vite plugin
+ * (see vite.config.ts). Classes are detected in the files of `src`.
+ */
+@import "tailwindcss" source(".");
 
-* {
-  box-sizing: border-box;
+@theme {
+  /* Only the colours below exist (Tailwind's default palette is disabled). */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-red: #ff0000;
+
+  --color-gray-100: #f7fafc;
+  --color-gray-200: #edf2f7;
+  --color-gray-300: #e2e8f0;
+  --color-gray-400: #cbd5e0;
+  --color-gray-500: #a0aec0;
+  --color-gray-600: #718096;
+  --color-gray-700: #4a5568;
+  --color-gray-800: #2d3748;
+  --color-gray-900: #1a202c;
+
+  --default-font-family: sans-serif;
 }
 
-body {
-  margin: 0;
-  padding: 0;
+/*
+ * Theme colours. These defaults (the original palette: https://colormagic.app/palette/jZnSMXhB3wLejgFrPBSv)
+ * are replaced at runtime by the active theme (src/configuration/themes.configuration.ts, applied by
+ * src/hooks/useThemeSync.ts), so Tailwind classes such as `text-primary` or `bg-quaternary/15` follow the theme.
+ * `static`: the variables are always emitted, as the component stylesheets use them too.
+ */
+@theme static {
+  --color-primary: #9b5de5;
+  --color-secondary: #f15bb5;
+  --color-tertiary: #fee440;
+  --color-quaternary: #00bbf9;
+  --color-quinary: #00f5d4;
+  --color-stamp: #ff0000;
 }
 
-@font-face {
-  font-family: 'Chiki';
-  src: url(./assets/fonts/Chiki-MVRZw.otf) format('opentype');
+/* Smoothly blend the application colours when the theme changes (the class is set for a moment by useThemeSync). */
+.theme-changing *,
+.theme-changing *::before,
+.theme-changing *::after {
+  transition: color 0.8s ease, background-color 0.8s ease, border-color 0.8s ease !important;
 }
 
-@layer base {
-  html {
-    font-family: Chiki, sans-serif;
-  }
+/* Low-end devices (see usePerformanceMonitor): switch the colours instantly instead. */
+html[data-performance='low'].theme-changing *,
+html[data-performance='low'].theme-changing *::before,
+html[data-performance='low'].theme-changing *::after {
+  transition: none !important;
 }
