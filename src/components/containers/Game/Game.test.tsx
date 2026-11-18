@@ -5,6 +5,9 @@ import * as arrayUtils from '../../../utils/array.utils';
 import { render, fireEvent, screen, act, within } from '@testing-library/react';
 import { Game } from './Game';
 import { MemoryRouter } from 'react-router-dom';
+import { useThemeStore } from '../../../store/theme.store';
+import { themes } from '../../../configuration/themes.configuration';
+import { gameConfiguration } from '../../../configuration/game.configuration';
 
 describe('Game', () => {
   beforeEach(() => {
@@ -17,6 +20,7 @@ describe('Game', () => {
   const baseEmojis = ['🧝‍♀️', '🌟', '🍪', '🦌', '🕯️', '👼', '🥳', '🎊'];
 
   beforeEach(() => {
+    useThemeStore.setState({ selection: 'auto', animationsPaused: null, autoThemeId: 'christmas' });
     vi.spyOn(arrayUtils, 'getRandomSubarray').mockReturnValue(baseEmojis);
     vi.spyOn(arrayUtils, 'shuffleArray').mockReturnValue([...baseEmojis, ...baseEmojis]);
   });
@@ -145,5 +149,106 @@ describe('Game', () => {
 
     screen.getAllByTestId('card').forEach(el => expect(within(el).getByRole('button')).not.toBeDisabled());
     screen.getAllByTestId('card').forEach(el => expect(within(el).getByRole('button')).toHaveAttribute('data-state', 'back'));
+  });
+
+  it('should draw the cards from the emojis of the active theme', () => {
+    renderUI();
+
+    expect(arrayUtils.getRandomSubarray).toHaveBeenCalledWith(themes.christmas.emojis, 8);
+  });
+
+  it('should deal a new board with the new emojis when the theme changes', () => {
+    renderUI();
+    screen.getAllByText('🧝‍♀️').forEach(el => fireEvent.click(el));
+    expect(screen.getByTestId('move-counter')).toHaveTextContent('1');
+
+    act(() => useThemeStore.getState().setSelection('halloween'));
+
+    expect(arrayUtils.getRandomSubarray).toHaveBeenLastCalledWith(themes.halloween.emojis, 8);
+    expect(screen.getByTestId('move-counter')).toHaveTextContent('0');
+    expect(screen.getByTestId('left-pairs')).toHaveTextContent('8');
+  });
+
+  it('should show the theme icon on the back of the cards', () => {
+    renderUI();
+
+    expect(screen.getAllByTestId('card-back-icon')[0]).toHaveTextContent(themes.christmas.icon);
+  });
+
+  it('should make both cards of a pair bounce when they match', () => {
+    renderUI();
+
+    screen.getAllByText('🧝‍♀️').forEach(el => fireEvent.click(el));
+
+    screen.getAllByText('🧝‍♀️').forEach(el => expect(el.closest('[data-testid="card"]')).toHaveAttribute('data-feedback', 'match'));
+    screen.getAllByText('🌟').forEach(el => expect(el.closest('[data-testid="card"]')).not.toHaveAttribute('data-feedback'));
+  });
+
+  it('should shake the two cards of a wrong pair, then reset them', () => {
+    renderUI();
+
+    fireEvent.click(screen.getAllByText('🌟')[0]);
+    fireEvent.click(screen.getAllByText('🍪')[0]);
+
+    expect(screen.getAllByText('🌟')[0].closest('[data-testid="card"]')).toHaveAttribute('data-feedback', 'mismatch');
+    expect(screen.getAllByText('🍪')[0].closest('[data-testid="card"]')).toHaveAttribute('data-feedback', 'mismatch');
+    expect(screen.getAllByText('🌟')[1].closest('[data-testid="card"]')).not.toHaveAttribute('data-feedback');
+
+    act(() => {
+      vi.advanceTimersByTime(gameConfiguration.flipBackTime);
+    });
+
+    expect(screen.getAllByText('🌟')[0].closest('[data-testid="card"]')).not.toHaveAttribute('data-feedback');
+    expect(screen.getAllByText('🌟')[0].closest('button')).toHaveAttribute('data-state', 'back');
+  });
+
+  it('should not freeze the board after a wrong pair: clicking another card turns the pair back at once', () => {
+    renderUI();
+
+    fireEvent.click(screen.getAllByText('🌟')[0]);
+    fireEvent.click(screen.getAllByText('🍪')[0]);
+    expect(screen.getAllByText('🌟')[0].closest('button')).toHaveAttribute('data-state', 'front');
+
+    // The player goes on right away, before the wrong pair has been turned back.
+    fireEvent.click(screen.getAllByText('🦌')[0]);
+
+    expect(screen.getAllByText('🌟')[0].closest('button')).toHaveAttribute('data-state', 'back');
+    expect(screen.getAllByText('🍪')[0].closest('button')).toHaveAttribute('data-state', 'back');
+    expect(screen.getAllByText('🦌')[0].closest('button')).toHaveAttribute('data-state', 'front');
+
+    // The cancelled timer does not turn the new card back.
+    act(() => {
+      vi.advanceTimersByTime(gameConfiguration.flipBackTime);
+    });
+    expect(screen.getAllByText('🦌')[0].closest('button')).toHaveAttribute('data-state', 'front');
+
+    // And the move can be completed.
+    fireEvent.click(screen.getAllByText('🦌')[1]);
+    expect(screen.getByTestId('left-pairs')).toHaveTextContent('7');
+  });
+
+  it('should not apply a pending flip-back of the previous board after Restart', () => {
+    renderUI();
+    fireEvent.click(screen.getAllByText('🌟')[0]);
+    fireEvent.click(screen.getAllByText('🍪')[0]);
+
+    fireEvent.click(screen.getByText('🔄 Restart'));
+    fireEvent.click(screen.getAllByText('🦌')[0]);
+    act(() => {
+      vi.advanceTimersByTime(gameConfiguration.flipBackTime * 2);
+    });
+
+    expect(screen.getAllByText('🦌')[0].closest('button')).toHaveAttribute('data-state', 'front');
+    expect(screen.getByTestId('move-counter')).toHaveTextContent('0');
+  });
+
+  it('should clear the pending flip-back when the game screen is closed', () => {
+    const { unmount } = renderUI();
+    fireEvent.click(screen.getAllByText('🌟')[0]);
+    fireEvent.click(screen.getAllByText('🍪')[0]);
+
+    unmount();
+
+    expect(vi.getTimerCount()).toBe(0);
   });
 });

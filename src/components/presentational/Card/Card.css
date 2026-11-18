@@ -1,46 +1,381 @@
+/* ================================================================================================
+ * Memory card: 3D flip, card design, holographic shine (front), match / mismatch feedback.
+ * Colours come from the active theme (--color-* variables, "R G B" triplets).
+ * ============================================================================================= */
+
 .card-wrapper {
+  position: relative;
   perspective: 1000px;
+  transition: transform 0.2s ease-out;
+}
+
+/* Cards that can still be turned lift slightly under the pointer. */
+.card-wrapper.is-playable:hover {
+  transform: translateY(-4px);
 }
 
 .card {
+  display: block;
+  /* No filter/opacity here: they would flatten the 3D flip. Shadows are on the faces. */
   transform-style: preserve-3d;
+  /* The flip: back shown by default, front shown when data-state="front" (set on click). */
+  transform: rotateY(0deg);
+  transition: transform 300ms cubic-bezier(.57,.21,.69,1.25);
+  /* Ready for the flip in advance: it starts on the compositor right away. */
+  will-change: transform;
+}
+
+.card[data-state='front'] {
+  transform: rotateY(180deg);
 }
 
 .front, .back {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  overflow: hidden;
 }
 
 .front {
   transform: rotateY(180deg);
 }
 
-/* CSS Transition classes (specific for flip) */
+/* ---------- Back: theme colours, diamond pattern and the theme icon in a badge ----------------- */
 
-.flip-exit {
-  transform: rotateY(0deg);
+.card-back-pattern {
+  position: absolute;
+  inset: 0;
+  /* First declaration: fallback for browsers without color-mix() (like Tailwind's own fallbacks). */
+  background:
+    radial-gradient(circle at 50% 50%, rgb(255 255 255 / 0.45), transparent 60%),
+    repeating-linear-gradient(45deg, rgb(0 0 0 / 0.08) 0 4px, transparent 4px 12px),
+    repeating-linear-gradient(-45deg, rgb(0 0 0 / 0.08) 0 4px, transparent 4px 12px);
+  background:
+    radial-gradient(circle at 50% 50%, rgb(255 255 255 / 0.45), transparent 60%),
+    repeating-linear-gradient(45deg, color-mix(in srgb, var(--color-primary) 14%, transparent) 0 4px, transparent 4px 12px),
+    repeating-linear-gradient(-45deg, color-mix(in srgb, var(--color-primary) 14%, transparent) 0 4px, transparent 4px 12px);
 }
 
-.flip-exit-active {
-  transform: rotateY(180deg);
-  transition: transform 300ms;
-  transition-timing-function: cubic-bezier(.57,.21,.69,1.25);
+/* Inner frame line. */
+.card-back-pattern::after {
+  content: '';
+  position: absolute;
+  inset: 6%;
+  border: 2px solid rgb(255 255 255 / 0.6);
+  border-radius: 0.4rem;
 }
 
-.flip-exit-done {
-  transform: rotateY(180deg);
+.card-back-emblem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62%;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.85);
+  box-shadow: 0 0 0 3px var(--color-primary), 0 2px 6px rgb(0 0 0 / 0.2);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 80%, transparent), 0 2px 6px rgb(0 0 0 / 0.2);
 }
 
-.flip-enter {
-  transform: rotateY(180deg);
+.back {
+  box-shadow: 0 4px 8px rgb(0 0 0 / 0.25);
 }
 
-.flip-enter-active {
-  transform: rotateY(0deg);
-  transition: transform 300ms;
-  transition-timing-function: cubic-bezier(.57,.21,.69,1.25);
+/* ---------- Front: framed card with a soft gradient -------------------------------------------- */
+
+.front {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Opaque white base under the tinted gradient: nothing shows through the card. */
+  background: #FFFFFF;
+  background:
+    radial-gradient(circle at 50% 40%, #FFFFFF 0 45%, transparent 75%),
+    linear-gradient(160deg, #FFFFFF, color-mix(in srgb, var(--color-tertiary) 35%, transparent)),
+    #FFFFFF;
+  box-shadow: inset 0 0 0 3px var(--color-quaternary), 0 4px 8px rgb(0 0 0 / 0.25);
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--color-quaternary) 75%, transparent), 0 4px 8px rgb(0 0 0 / 0.25);
 }
 
-.flip-enter-done {
-  transform: rotateY(0deg);
+.card-front-frame {
+  position: absolute;
+  inset: 7%;
+  border: 2px solid rgb(0 0 0 / 0.12);
+  border: 2px solid color-mix(in srgb, var(--color-quaternary) 35%, transparent);
+  border-radius: 0.5rem;
+}
+
+.card-emoji {
+  filter: drop-shadow(0 3px 2px rgb(0 0 0 / 0.2));
+}
+
+/* ---------- Holographic shine, played each time the card is turned face up --------------------- */
+
+.holo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  overflow: hidden;
+  opacity: 0;
+}
+
+/*
+ * Performance rule: every animation of the cards only changes `transform` or `opacity`.
+ * Those run on the compositor; anything else (e.g. background-position) would force the main
+ * thread to redraw every frame while it plays, which also re-styles the animated background.
+ */
+.card[data-state='front'] .holo {
+  animation: holo-visibility 1.3s ease-out 0.12s both;
+}
+
+/* Light glare shared by every shape: a wide strip with a white band, slid across the card. */
+.holo-glare {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -100%;
+  width: 300%;
+  background: linear-gradient(115deg, transparent 45%, rgb(255 255 255 / 0.6) 50%, transparent 55%);
+  transform: translateX(-33.4%);
+}
+
+.card[data-state='front'] .holo-glare {
+  animation: holo-glare 1s ease-in-out 0.25s both;
+}
+
+@keyframes holo-glare {
+  from { transform: translateX(-33.4%); }
+  to { transform: translateX(33.4%); }
+}
+
+.holo::before,
+.holo::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+/* The `.card[data-state='front']` selectors start matching when the card shows its front,
+   which (re)starts the animations every time the card is turned face up. */
+
+@keyframes holo-visibility {
+  0% { opacity: 0; }
+  15%, 65% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* 1. Sweep: a diagonal rainbow band crosses the card. */
+.holo--sweep::before {
+  inset: -50%;
+  background: linear-gradient(115deg, transparent 36%, rgb(255 0 128 / 0.4) 42%, rgb(255 220 0 / 0.4) 46%,
+    rgb(0 255 170 / 0.4) 50%, rgb(0 170 255 / 0.4) 54%, rgb(170 0 255 / 0.4) 58%, transparent 64%);
+  mix-blend-mode: multiply;
+  transform: translateX(-55%);
+}
+
+.card[data-state='front'] .holo--sweep::before {
+  animation: holo-sweep 1.1s ease-in-out 0.15s both;
+}
+
+@keyframes holo-sweep {
+  from { transform: translateX(-55%); }
+  to { transform: translateX(55%); }
+}
+
+/* 2. Rays: a burst of coloured light rays around the emoji, turning while it fades out. */
+.holo--rays::before {
+  inset: -40%;
+  background: repeating-conic-gradient(from 0deg,
+    rgb(255 0 128 / 0.35) 0deg 5deg, transparent 5deg 15deg,
+    rgb(255 200 0 / 0.35) 15deg 20deg, transparent 20deg 30deg,
+    rgb(0 190 255 / 0.35) 30deg 35deg, transparent 35deg 45deg);
+  /* Soft: no rays on the emoji itself, and they fade towards the edges. */
+  -webkit-mask-image: radial-gradient(circle, transparent 14%, #000 30%, transparent 62%);
+  mask-image: radial-gradient(circle, transparent 14%, #000 30%, transparent 62%);
+  mix-blend-mode: multiply;
+  transform: rotate(0deg) scale(0.7);
+}
+
+.card[data-state='front'] .holo--rays::before {
+  animation: holo-rays 1.3s ease-out 0.12s both;
+}
+
+@keyframes holo-rays {
+  from { transform: rotate(0deg) scale(0.7); }
+  to { transform: rotate(50deg) scale(1.15); }
+}
+
+/* 3. Prism: a rainbow wheel turning behind the emoji. */
+.holo--prism::before {
+  inset: -60%;
+  background: conic-gradient(from 0deg, #FF4D6D, #FFB703, #B5E48C, #48CAE4, #7B61FF, #F72585, #FF4D6D);
+  mix-blend-mode: multiply;
+  opacity: 0.7;
+  mask-image: radial-gradient(circle, transparent 18%, #000 48%);
+}
+
+.card[data-state='front'] .holo--prism::before {
+  animation: holo-prism 1.3s ease-out 0.12s both;
+}
+
+@keyframes holo-prism {
+  from { transform: rotate(0deg) scale(0.8); }
+  to { transform: rotate(270deg) scale(1.1); }
+}
+
+/* 4. Ring: a rainbow ring bursts from the centre. */
+.holo--ring::before {
+  inset: 0;
+  background: radial-gradient(circle, transparent 30%, rgb(255 0 128 / 0.5) 38%, rgb(255 220 0 / 0.5) 44%,
+    rgb(0 255 170 / 0.5) 50%, rgb(0 170 255 / 0.5) 56%, transparent 64%);
+  mix-blend-mode: multiply;
+  transform: scale(0.2);
+}
+
+.holo--ring::after {
+  inset: 0;
+  background: radial-gradient(circle, rgb(255 255 255 / 0.6), transparent 55%);
+  opacity: 0;
+}
+
+.card[data-state='front'] .holo--ring::before {
+  animation: holo-ring 1.1s cubic-bezier(0.2, 0.7, 0.3, 1) 0.15s both;
+}
+
+.card[data-state='front'] .holo--ring::after {
+  animation: holo-flash 0.6s ease-out 0.15s both;
+}
+
+@keyframes holo-ring {
+  from { transform: scale(0.2); }
+  to { transform: scale(1.9); }
+}
+
+@keyframes holo-flash {
+  0% { opacity: 0; }
+  30% { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+
+/* 5. Glitter: sparkling stars pop all over the card, on a soft rainbow haze. */
+.holo--glitter::before {
+  inset: 0;
+  background: linear-gradient(135deg, rgb(255 111 216 / 0.35), rgb(111 200 255 / 0.35), rgb(255 216 111 / 0.35));
+  mix-blend-mode: multiply;
+}
+
+.holo-star {
+  position: absolute;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%) scale(0);
+  background: radial-gradient(circle, #FFFFFF 0 30%, #FFE9A8 60%, #FFC8F0);
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+}
+
+.card[data-state='front'] .holo-star {
+  animation-name: holo-star;
+  animation-duration: 0.7s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
+
+@keyframes holo-star {
+  0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); }
+  50% { transform: translate(-50%, -50%) scale(1.2) rotate(45deg); }
+  100% { transform: translate(-50%, -50%) scale(0) rotate(90deg); }
+}
+
+/* ---------- Match: both cards bounce, a ring pulses, then they keep a soft glow ---------------- */
+
+.card-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 0.9rem;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* The delay lets the second card finish turning over. */
+.card-wrapper.card--match {
+  animation: card-match-bounce 0.85s cubic-bezier(0.28, 0.84, 0.42, 1) 0.3s both;
+}
+
+.card-wrapper.card--match::after {
+  /* Gold, whatever the theme: clearly different from the red "wrong pair" flash. */
+  box-shadow: 0 0 0 3px #FACC15, 0 0 18px 5px rgb(250 204 21 / 0.7);
+  animation: card-match-ring 0.9s ease-out 0.35s both;
+}
+
+@keyframes card-match-bounce {
+  0% { transform: translateY(0) scale(1); }
+  22% { transform: translateY(-16%) scale(1.08); }
+  42% { transform: translateY(0) scale(0.97); }
+  62% { transform: translateY(-7%) scale(1.03); }
+  80%, 100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes card-match-ring {
+  0% { opacity: 0; transform: scale(0.95); }
+  30% { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 0.45; transform: scale(1); }
+}
+
+/* ---------- Mismatch: a quick sideways shake and a red flash ------------------------------------ */
+
+.card-wrapper.card--mismatch {
+  animation: card-mismatch-shake 0.42s ease-in-out 0.3s both;
+}
+
+.card-wrapper.card--mismatch::after {
+  box-shadow: 0 0 0 3px #EF4444, 0 0 14px 3px rgb(239 68 68 / 0.55);
+  animation: card-mismatch-flash 0.5s ease-out 0.3s both;
+}
+
+@keyframes card-mismatch-shake {
+  0%, 100% { transform: translateX(0); }
+  14% { transform: translateX(-9%) rotate(-2deg); }
+  28% { transform: translateX(8%) rotate(2deg); }
+  42% { transform: translateX(-6%) rotate(-1deg); }
+  57% { transform: translateX(4%) rotate(1deg); }
+  71% { transform: translateX(-2%); }
+  85% { transform: translateX(1%); }
+}
+
+@keyframes card-mismatch-flash {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---------- Low-end devices: only the plain light glare, no blended layers --------------------- */
+
+html[data-performance='low'] .holo::before,
+html[data-performance='low'] .holo::after,
+html[data-performance='low'] .holo-star {
+  display: none;
+}
+
+/* ---------- Reduced motion: no movement, the coloured rings tell match / mismatch --------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .card-wrapper,
+  .card-wrapper.card--match,
+  .card-wrapper.card--mismatch {
+    animation: none;
+    transition: none;
+  }
+
+  .card-wrapper.is-playable:hover {
+    transform: none;
+  }
+
+  .card[data-state='front'] .holo,
+  .card[data-state='front'] .holo-glare,
+  .card[data-state='front'] .holo::before,
+  .card[data-state='front'] .holo::after,
+  .card[data-state='front'] .holo-star {
+    animation: none;
+  }
 }

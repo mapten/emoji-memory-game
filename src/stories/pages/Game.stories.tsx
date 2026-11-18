@@ -7,6 +7,7 @@ import { Game } from '../../components/containers/Game/Game';
 const meta = {
   title: 'Pages/Game',
   component: Game,
+  parameters: { layout: 'fullscreen', themedBackground: true },
   decorators: [(story) => <MemoryRouter initialEntries={['test?difficulty=easy']}>{story()}</MemoryRouter>],
 } satisfies Meta<typeof Game>;
 

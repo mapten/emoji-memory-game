@@ -1,0 +1,39 @@
+/* ================================================================================================
+ * Autumn background. Every part of the SVG has an id (#autumn-sky, #autumn-sun, #autumn-clouds,
+ * #autumn-far-forest, #autumn-valley, #autumn-cabin, #autumn-windows, #autumn-chimney-smoke,
+ * #autumn-big-tree, #autumn-foreground, #autumn-falling-leaves...) and can be restyled here.
+ * ============================================================================================= */
+
+#autumn-background {
+  /* Sky */
+  --sky-top: #F3A97E;
+  --sky-middle: #F9CFA1;
+  --sky-bottom: #FCE6C6;
+  --sun: #FFF4DA;
+  --cloud: #FFF5E8;
+  /* Cabin windows */
+  --window-off: #5A2E22;
+  --window-on: #FFD27A;
+  --window-frame: #4A2418;
+}
+
+#autumn-background .sky-top { stop-color: var(--sky-top); }
+#autumn-background .sky-middle { stop-color: var(--sky-middle); }
+#autumn-background .sky-bottom { stop-color: var(--sky-bottom); }
+#autumn-background .sun-disc { fill: var(--sun); }
+#autumn-background .cloud { fill: var(--cloud); opacity: 0.55; }
+
+/* The low sun breathes slowly. */
+#autumn-sun .sun-glow {
+  --pulse-duration: 7s;
+}
+
+/* Smoke is a little thinner on a mild autumn evening. */
+#autumn-chimney-smoke {
+  opacity: 0.8;
+}
+
+/* Falling leaves stay slightly transparent so they never compete with the game. */
+#autumn-falling-leaves {
+  opacity: 0.92;
+}

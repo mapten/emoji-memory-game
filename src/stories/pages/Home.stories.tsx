@@ -7,6 +7,7 @@ import { Home } from '../../components/containers/Home/Home';
 const meta = {
   title: 'Pages/Home',
   component: Home,
+  parameters: { layout: 'fullscreen', themedBackground: true },
   decorators: [(story) => <MemoryRouter initialEntries={['test?difficulty=easy']}>{story()}</MemoryRouter>],
 } satisfies Meta<typeof Home>;
 

@@ -7,6 +7,7 @@ import { DifficultyLevelSelector } from '../../components/containers/DifficultyL
 const meta = {
   title: 'Pages/DifficultyLevelSelector',
   component: DifficultyLevelSelector,
+  parameters: { layout: 'fullscreen', themedBackground: true },
   decorators: [(story) => <MemoryRouter initialEntries={['test?difficulty=easy']}>{story()}</MemoryRouter>],
 } satisfies Meta<typeof DifficultyLevelSelector>;
 

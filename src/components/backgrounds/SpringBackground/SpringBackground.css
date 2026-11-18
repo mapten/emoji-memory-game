@@ -1,0 +1,26 @@
+/* ================================================================================================
+ * Spring background. Parts: #spring-sky, #spring-sun, #spring-clouds, #spring-birds,
+ * #spring-hills, #spring-windmill (#spring-windmill-blades), #spring-meadow, #spring-daisies,
+ * #spring-fence, #spring-cherry-tree, #spring-tulips, #spring-butterflies, #spring-petals.
+ * ============================================================================================= */
+
+#spring-background {
+  --sky-top: #7CC8F0;
+  --sky-middle: #C3EBFC;
+  --sky-bottom: #EEFAFF;
+  --sun: #FFE66D;
+  --sun-rays: #FFE99A;
+  --cloud: #FFFFFF;
+}
+
+#spring-background .sky-top { stop-color: var(--sky-top); }
+#spring-background .sky-middle { stop-color: var(--sky-middle); }
+#spring-background .sky-bottom { stop-color: var(--sky-bottom); }
+#spring-background .sun-disc { fill: var(--sun); }
+#spring-background .sun-rays { fill: var(--sun-rays); --spin-duration: 60s; }
+#spring-background .cloud { fill: var(--cloud); opacity: 0.85; }
+
+/* The windmill turns slowly in the spring breeze. */
+#spring-windmill-blades { --spin-duration: 14s; }
+
+#spring-petals { opacity: 0.95; }

@@ -1,0 +1,75 @@
+/* ================================================================================================
+ * Summer background. Parts: #summer-sky, #summer-sun, #summer-clouds, #summer-seagulls,
+ * #summer-sea (#summer-island, #summer-waves, #summer-sea-glints), #summer-sailboat,
+ * #summer-beach (.shore-wave), #summer-palms, #summer-beach-props (#summer-umbrella,
+ * #summer-ball, #summer-sandcastle, #summer-shells), #summer-crab.
+ * ============================================================================================= */
+
+#summer-background {
+  --sky-top: #3FB6E8;
+  --sky-middle: #92D8F4;
+  --sky-bottom: #E9F7FC;
+  --sun: #FFD23F;
+  --sea-far: #1479B8;
+  --sea-near: #3FC1D9;
+  --cloud: #FFFFFF;
+}
+
+#summer-background .sky-top { stop-color: var(--sky-top); }
+#summer-background .sky-middle { stop-color: var(--sky-middle); }
+#summer-background .sky-bottom { stop-color: var(--sky-bottom); }
+#summer-background .sea-far { stop-color: var(--sea-far); }
+#summer-background .sea-near { stop-color: var(--sea-near); }
+#summer-background .sun-disc { fill: var(--sun); }
+#summer-background .cloud { fill: var(--cloud); opacity: 0.9; }
+#summer-sun .sun-glow { --pulse-duration: 4s; }
+
+#summer-background .wave-crest {
+  fill: none;
+  stroke: #FFFFFF;
+  stroke-linecap: round;
+}
+
+#summer-sea-glints { fill: #FFFFFF; }
+
+/* The boat rocks gently on the waves. */
+#summer-sailboat .boat-bob {
+  animation-name: summer-boat-rock;
+}
+
+@keyframes summer-boat-rock {
+  from { transform: translateY(-5px) rotate(-2deg); }
+  to { transform: translateY(5px) rotate(2deg); }
+}
+
+/* Foam washes up the beach and back. */
+#summer-beach .shore-wave {
+  animation: summer-shore 6s ease-in-out infinite;
+}
+
+@keyframes summer-shore {
+  0%, 100% { transform: translateY(-6px); opacity: 0.3; }
+  50% { transform: translateY(16px); opacity: 1; }
+}
+
+/* The crab scuttles sideways, pauses, and goes back. */
+#summer-crab .crab-walk {
+  animation: summer-crab-walk 14s ease-in-out infinite;
+}
+
+@keyframes summer-crab-walk {
+  0%, 10% { transform: translateX(0); }
+  40%, 55% { transform: translateX(160px); }
+  85%, 100% { transform: translateX(0); }
+}
+
+#summer-sandcastle .flag {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: summer-flag 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes summer-flag {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0.7); }
+}

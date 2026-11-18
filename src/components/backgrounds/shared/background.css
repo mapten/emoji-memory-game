@@ -1,0 +1,600 @@
+/* ================================================================================================
+ * Shared styles of the themed backgrounds.
+ *
+ * Every background is an inline SVG (`svg.themed-background`) whose parts have ids and classes,
+ * so they can be restyled from CSS. Each theme has its own stylesheet next to its component
+ * (e.g. AutumnBackground.css) with its colour variables and specific animations.
+ *
+ * Only `transform` and `opacity` are animated, which keeps the animations cheap for the browser.
+ * ============================================================================================= */
+
+.themed-background {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Pause button / "reduce motion": freeze every animation of the scene where it is.
+   The `is-paused` class can be set on the SVG itself or on any ancestor. */
+.themed-background.is-paused,
+.themed-background.is-paused *,
+.is-paused .themed-background,
+.is-paused .themed-background * {
+  animation-play-state: paused !important;
+}
+
+/* ---------- Particles (snow, leaves, petals, embers...) -------------------------------------- */
+
+/*
+ * One animation per particle: it falls (or rises) through the scene while swaying sideways
+ * (3 times) and, for leaves and petals ("tumble"), spinning and turning over (3 times).
+ * Each particle uses one of a few ready-made variants (--float-1..3: sway of 15, 30, 50px;
+ * --tumble-1..3: sway of 40, 65, 90px with 1.5, -2, 2.5 turns),
+ * and its own duration and delay (--fall-duration, --fall-delay, set by Particles.tsx).
+ *
+ * The keyframes are generated from a sine function (sampled 36 times) and contain plain values on
+ * purpose: CSS variables inside keyframes must be re-resolved for every particle each time the main
+ * thread draws a frame, which made the scene several times more expensive.
+ */
+.themed-background .particle-motion {
+  animation: bg-float-2 var(--fall-duration, 12s) linear var(--fall-delay, 0s) infinite;
+}
+
+.themed-background .particle-motion--float-1 { animation-name: bg-float-1; }
+.themed-background .particles--rise .particle-motion--float-1 { animation-name: bg-rise-1; }
+.themed-background .particle-motion--tumble-1 { animation-name: bg-tumble-1; }
+.themed-background .particle-motion--float-2 { animation-name: bg-float-2; }
+.themed-background .particles--rise .particle-motion--float-2 { animation-name: bg-rise-2; }
+.themed-background .particle-motion--tumble-2 { animation-name: bg-tumble-2; }
+.themed-background .particle-motion--float-3 { animation-name: bg-float-3; }
+.themed-background .particles--rise .particle-motion--float-3 { animation-name: bg-rise-3; }
+.themed-background .particle-motion--tumble-3 { animation-name: bg-tumble-3; }
+
+@keyframes bg-float-1 {
+  0% { transform: translate(0.0px, -90px); }
+  2.78% { transform: translate(7.5px, -57px); }
+  5.56% { transform: translate(13.0px, -24px); }
+  8.33% { transform: translate(15.0px, 8px); }
+  11.11% { transform: translate(13.0px, 41px); }
+  13.89% { transform: translate(7.5px, 74px); }
+  16.67% { transform: translate(0.0px, 107px); }
+  19.44% { transform: translate(-7.5px, 139px); }
+  22.22% { transform: translate(-13.0px, 172px); }
+  25% { transform: translate(-15.0px, 205px); }
+  27.78% { transform: translate(-13.0px, 238px); }
+  30.56% { transform: translate(-7.5px, 271px); }
+  33.33% { transform: translate(-0.0px, 303px); }
+  36.11% { transform: translate(7.5px, 336px); }
+  38.89% { transform: translate(13.0px, 369px); }
+  41.67% { transform: translate(15.0px, 402px); }
+  44.44% { transform: translate(13.0px, 434px); }
+  47.22% { transform: translate(7.5px, 467px); }
+  50% { transform: translate(0.0px, 500px); }
+  52.78% { transform: translate(-7.5px, 533px); }
+  55.56% { transform: translate(-13.0px, 566px); }
+  58.33% { transform: translate(-15.0px, 598px); }
+  61.11% { transform: translate(-13.0px, 631px); }
+  63.89% { transform: translate(-7.5px, 664px); }
+  66.67% { transform: translate(-0.0px, 697px); }
+  69.44% { transform: translate(7.5px, 729px); }
+  72.22% { transform: translate(13.0px, 762px); }
+  75% { transform: translate(15.0px, 795px); }
+  77.78% { transform: translate(13.0px, 828px); }
+  80.56% { transform: translate(7.5px, 861px); }
+  83.33% { transform: translate(0.0px, 893px); }
+  86.11% { transform: translate(-7.5px, 926px); }
+  88.89% { transform: translate(-13.0px, 959px); }
+  91.67% { transform: translate(-15.0px, 992px); }
+  94.44% { transform: translate(-13.0px, 1024px); }
+  97.22% { transform: translate(-7.5px, 1057px); }
+  100% { transform: translate(-0.0px, 1090px); }
+}
+@keyframes bg-rise-1 {
+  0% { transform: translate(0.0px, 1090px); }
+  2.78% { transform: translate(7.5px, 1057px); }
+  5.56% { transform: translate(13.0px, 1024px); }
+  8.33% { transform: translate(15.0px, 992px); }
+  11.11% { transform: translate(13.0px, 959px); }
+  13.89% { transform: translate(7.5px, 926px); }
+  16.67% { transform: translate(0.0px, 893px); }
+  19.44% { transform: translate(-7.5px, 861px); }
+  22.22% { transform: translate(-13.0px, 828px); }
+  25% { transform: translate(-15.0px, 795px); }
+  27.78% { transform: translate(-13.0px, 762px); }
+  30.56% { transform: translate(-7.5px, 729px); }
+  33.33% { transform: translate(-0.0px, 697px); }
+  36.11% { transform: translate(7.5px, 664px); }
+  38.89% { transform: translate(13.0px, 631px); }
+  41.67% { transform: translate(15.0px, 598px); }
+  44.44% { transform: translate(13.0px, 566px); }
+  47.22% { transform: translate(7.5px, 533px); }
+  50% { transform: translate(0.0px, 500px); }
+  52.78% { transform: translate(-7.5px, 467px); }
+  55.56% { transform: translate(-13.0px, 434px); }
+  58.33% { transform: translate(-15.0px, 402px); }
+  61.11% { transform: translate(-13.0px, 369px); }
+  63.89% { transform: translate(-7.5px, 336px); }
+  66.67% { transform: translate(-0.0px, 303px); }
+  69.44% { transform: translate(7.5px, 271px); }
+  72.22% { transform: translate(13.0px, 238px); }
+  75% { transform: translate(15.0px, 205px); }
+  77.78% { transform: translate(13.0px, 172px); }
+  80.56% { transform: translate(7.5px, 139px); }
+  83.33% { transform: translate(0.0px, 107px); }
+  86.11% { transform: translate(-7.5px, 74px); }
+  88.89% { transform: translate(-13.0px, 41px); }
+  91.67% { transform: translate(-15.0px, 8px); }
+  94.44% { transform: translate(-13.0px, -24px); }
+  97.22% { transform: translate(-7.5px, -57px); }
+  100% { transform: translate(-0.0px, -90px); }
+}
+@keyframes bg-float-2 {
+  0% { transform: translate(0.0px, -90px); }
+  2.78% { transform: translate(15.0px, -57px); }
+  5.56% { transform: translate(26.0px, -24px); }
+  8.33% { transform: translate(30.0px, 8px); }
+  11.11% { transform: translate(26.0px, 41px); }
+  13.89% { transform: translate(15.0px, 74px); }
+  16.67% { transform: translate(0.0px, 107px); }
+  19.44% { transform: translate(-15.0px, 139px); }
+  22.22% { transform: translate(-26.0px, 172px); }
+  25% { transform: translate(-30.0px, 205px); }
+  27.78% { transform: translate(-26.0px, 238px); }
+  30.56% { transform: translate(-15.0px, 271px); }
+  33.33% { transform: translate(-0.0px, 303px); }
+  36.11% { transform: translate(15.0px, 336px); }
+  38.89% { transform: translate(26.0px, 369px); }
+  41.67% { transform: translate(30.0px, 402px); }
+  44.44% { transform: translate(26.0px, 434px); }
+  47.22% { transform: translate(15.0px, 467px); }
+  50% { transform: translate(0.0px, 500px); }
+  52.78% { transform: translate(-15.0px, 533px); }
+  55.56% { transform: translate(-26.0px, 566px); }
+  58.33% { transform: translate(-30.0px, 598px); }
+  61.11% { transform: translate(-26.0px, 631px); }
+  63.89% { transform: translate(-15.0px, 664px); }
+  66.67% { transform: translate(-0.0px, 697px); }
+  69.44% { transform: translate(15.0px, 729px); }
+  72.22% { transform: translate(26.0px, 762px); }
+  75% { transform: translate(30.0px, 795px); }
+  77.78% { transform: translate(26.0px, 828px); }
+  80.56% { transform: translate(15.0px, 861px); }
+  83.33% { transform: translate(0.0px, 893px); }
+  86.11% { transform: translate(-15.0px, 926px); }
+  88.89% { transform: translate(-26.0px, 959px); }
+  91.67% { transform: translate(-30.0px, 992px); }
+  94.44% { transform: translate(-26.0px, 1024px); }
+  97.22% { transform: translate(-15.0px, 1057px); }
+  100% { transform: translate(-0.0px, 1090px); }
+}
+@keyframes bg-rise-2 {
+  0% { transform: translate(0.0px, 1090px); }
+  2.78% { transform: translate(15.0px, 1057px); }
+  5.56% { transform: translate(26.0px, 1024px); }
+  8.33% { transform: translate(30.0px, 992px); }
+  11.11% { transform: translate(26.0px, 959px); }
+  13.89% { transform: translate(15.0px, 926px); }
+  16.67% { transform: translate(0.0px, 893px); }
+  19.44% { transform: translate(-15.0px, 861px); }
+  22.22% { transform: translate(-26.0px, 828px); }
+  25% { transform: translate(-30.0px, 795px); }
+  27.78% { transform: translate(-26.0px, 762px); }
+  30.56% { transform: translate(-15.0px, 729px); }
+  33.33% { transform: translate(-0.0px, 697px); }
+  36.11% { transform: translate(15.0px, 664px); }
+  38.89% { transform: translate(26.0px, 631px); }
+  41.67% { transform: translate(30.0px, 598px); }
+  44.44% { transform: translate(26.0px, 566px); }
+  47.22% { transform: translate(15.0px, 533px); }
+  50% { transform: translate(0.0px, 500px); }
+  52.78% { transform: translate(-15.0px, 467px); }
+  55.56% { transform: translate(-26.0px, 434px); }
+  58.33% { transform: translate(-30.0px, 402px); }
+  61.11% { transform: translate(-26.0px, 369px); }
+  63.89% { transform: translate(-15.0px, 336px); }
+  66.67% { transform: translate(-0.0px, 303px); }
+  69.44% { transform: translate(15.0px, 271px); }
+  72.22% { transform: translate(26.0px, 238px); }
+  75% { transform: translate(30.0px, 205px); }
+  77.78% { transform: translate(26.0px, 172px); }
+  80.56% { transform: translate(15.0px, 139px); }
+  83.33% { transform: translate(0.0px, 107px); }
+  86.11% { transform: translate(-15.0px, 74px); }
+  88.89% { transform: translate(-26.0px, 41px); }
+  91.67% { transform: translate(-30.0px, 8px); }
+  94.44% { transform: translate(-26.0px, -24px); }
+  97.22% { transform: translate(-15.0px, -57px); }
+  100% { transform: translate(-0.0px, -90px); }
+}
+@keyframes bg-float-3 {
+  0% { transform: translate(0.0px, -90px); }
+  2.78% { transform: translate(25.0px, -57px); }
+  5.56% { transform: translate(43.3px, -24px); }
+  8.33% { transform: translate(50.0px, 8px); }
+  11.11% { transform: translate(43.3px, 41px); }
+  13.89% { transform: translate(25.0px, 74px); }
+  16.67% { transform: translate(0.0px, 107px); }
+  19.44% { transform: translate(-25.0px, 139px); }
+  22.22% { transform: translate(-43.3px, 172px); }
+  25% { transform: translate(-50.0px, 205px); }
+  27.78% { transform: translate(-43.3px, 238px); }
+  30.56% { transform: translate(-25.0px, 271px); }
+  33.33% { transform: translate(-0.0px, 303px); }
+  36.11% { transform: translate(25.0px, 336px); }
+  38.89% { transform: translate(43.3px, 369px); }
+  41.67% { transform: translate(50.0px, 402px); }
+  44.44% { transform: translate(43.3px, 434px); }
+  47.22% { transform: translate(25.0px, 467px); }
+  50% { transform: translate(0.0px, 500px); }
+  52.78% { transform: translate(-25.0px, 533px); }
+  55.56% { transform: translate(-43.3px, 566px); }
+  58.33% { transform: translate(-50.0px, 598px); }
+  61.11% { transform: translate(-43.3px, 631px); }
+  63.89% { transform: translate(-25.0px, 664px); }
+  66.67% { transform: translate(-0.0px, 697px); }
+  69.44% { transform: translate(25.0px, 729px); }
+  72.22% { transform: translate(43.3px, 762px); }
+  75% { transform: translate(50.0px, 795px); }
+  77.78% { transform: translate(43.3px, 828px); }
+  80.56% { transform: translate(25.0px, 861px); }
+  83.33% { transform: translate(0.0px, 893px); }
+  86.11% { transform: translate(-25.0px, 926px); }
+  88.89% { transform: translate(-43.3px, 959px); }
+  91.67% { transform: translate(-50.0px, 992px); }
+  94.44% { transform: translate(-43.3px, 1024px); }
+  97.22% { transform: translate(-25.0px, 1057px); }
+  100% { transform: translate(-0.0px, 1090px); }
+}
+@keyframes bg-rise-3 {
+  0% { transform: translate(0.0px, 1090px); }
+  2.78% { transform: translate(25.0px, 1057px); }
+  5.56% { transform: translate(43.3px, 1024px); }
+  8.33% { transform: translate(50.0px, 992px); }
+  11.11% { transform: translate(43.3px, 959px); }
+  13.89% { transform: translate(25.0px, 926px); }
+  16.67% { transform: translate(0.0px, 893px); }
+  19.44% { transform: translate(-25.0px, 861px); }
+  22.22% { transform: translate(-43.3px, 828px); }
+  25% { transform: translate(-50.0px, 795px); }
+  27.78% { transform: translate(-43.3px, 762px); }
+  30.56% { transform: translate(-25.0px, 729px); }
+  33.33% { transform: translate(-0.0px, 697px); }
+  36.11% { transform: translate(25.0px, 664px); }
+  38.89% { transform: translate(43.3px, 631px); }
+  41.67% { transform: translate(50.0px, 598px); }
+  44.44% { transform: translate(43.3px, 566px); }
+  47.22% { transform: translate(25.0px, 533px); }
+  50% { transform: translate(0.0px, 500px); }
+  52.78% { transform: translate(-25.0px, 467px); }
+  55.56% { transform: translate(-43.3px, 434px); }
+  58.33% { transform: translate(-50.0px, 402px); }
+  61.11% { transform: translate(-43.3px, 369px); }
+  63.89% { transform: translate(-25.0px, 336px); }
+  66.67% { transform: translate(-0.0px, 303px); }
+  69.44% { transform: translate(25.0px, 271px); }
+  72.22% { transform: translate(43.3px, 238px); }
+  75% { transform: translate(50.0px, 205px); }
+  77.78% { transform: translate(43.3px, 172px); }
+  80.56% { transform: translate(25.0px, 139px); }
+  83.33% { transform: translate(0.0px, 107px); }
+  86.11% { transform: translate(-25.0px, 74px); }
+  88.89% { transform: translate(-43.3px, 41px); }
+  91.67% { transform: translate(-50.0px, 8px); }
+  94.44% { transform: translate(-43.3px, -24px); }
+  97.22% { transform: translate(-25.0px, -57px); }
+  100% { transform: translate(-0.0px, -90px); }
+}
+@keyframes bg-tumble-1 {
+  0% { transform: translate(0.0px, -90px) rotate(0.0deg) scaleX(1.000); }
+  2.78% { transform: translate(20.0px, -57px) rotate(15.0deg) scaleX(0.910); }
+  5.56% { transform: translate(34.6px, -24px) rotate(30.0deg) scaleX(0.663); }
+  8.33% { transform: translate(40.0px, 8px) rotate(45.0deg) scaleX(0.325); }
+  11.11% { transform: translate(34.6px, 41px) rotate(60.0deg) scaleX(-0.012); }
+  13.89% { transform: translate(20.0px, 74px) rotate(75.0deg) scaleX(-0.260); }
+  16.67% { transform: translate(0.0px, 107px) rotate(90.0deg) scaleX(-0.350); }
+  19.44% { transform: translate(-20.0px, 139px) rotate(105.0deg) scaleX(-0.260); }
+  22.22% { transform: translate(-34.6px, 172px) rotate(120.0deg) scaleX(-0.013); }
+  25% { transform: translate(-40.0px, 205px) rotate(135.0deg) scaleX(0.325); }
+  27.78% { transform: translate(-34.6px, 238px) rotate(150.0deg) scaleX(0.663); }
+  30.56% { transform: translate(-20.0px, 271px) rotate(165.0deg) scaleX(0.910); }
+  33.33% { transform: translate(-0.0px, 303px) rotate(180.0deg) scaleX(1.000); }
+  36.11% { transform: translate(20.0px, 336px) rotate(195.0deg) scaleX(0.910); }
+  38.89% { transform: translate(34.6px, 369px) rotate(210.0deg) scaleX(0.663); }
+  41.67% { transform: translate(40.0px, 402px) rotate(225.0deg) scaleX(0.325); }
+  44.44% { transform: translate(34.6px, 434px) rotate(240.0deg) scaleX(-0.012); }
+  47.22% { transform: translate(20.0px, 467px) rotate(255.0deg) scaleX(-0.260); }
+  50% { transform: translate(0.0px, 500px) rotate(270.0deg) scaleX(-0.350); }
+  52.78% { transform: translate(-20.0px, 533px) rotate(285.0deg) scaleX(-0.260); }
+  55.56% { transform: translate(-34.6px, 566px) rotate(300.0deg) scaleX(-0.012); }
+  58.33% { transform: translate(-40.0px, 598px) rotate(315.0deg) scaleX(0.325); }
+  61.11% { transform: translate(-34.6px, 631px) rotate(330.0deg) scaleX(0.663); }
+  63.89% { transform: translate(-20.0px, 664px) rotate(345.0deg) scaleX(0.910); }
+  66.67% { transform: translate(-0.0px, 697px) rotate(360.0deg) scaleX(1.000); }
+  69.44% { transform: translate(20.0px, 729px) rotate(375.0deg) scaleX(0.910); }
+  72.22% { transform: translate(34.6px, 762px) rotate(390.0deg) scaleX(0.662); }
+  75% { transform: translate(40.0px, 795px) rotate(405.0deg) scaleX(0.325); }
+  77.78% { transform: translate(34.6px, 828px) rotate(420.0deg) scaleX(-0.012); }
+  80.56% { transform: translate(20.0px, 861px) rotate(435.0deg) scaleX(-0.260); }
+  83.33% { transform: translate(0.0px, 893px) rotate(450.0deg) scaleX(-0.350); }
+  86.11% { transform: translate(-20.0px, 926px) rotate(465.0deg) scaleX(-0.260); }
+  88.89% { transform: translate(-34.6px, 959px) rotate(480.0deg) scaleX(-0.013); }
+  91.67% { transform: translate(-40.0px, 992px) rotate(495.0deg) scaleX(0.325); }
+  94.44% { transform: translate(-34.6px, 1024px) rotate(510.0deg) scaleX(0.663); }
+  97.22% { transform: translate(-20.0px, 1057px) rotate(525.0deg) scaleX(0.910); }
+  100% { transform: translate(-0.0px, 1090px) rotate(540.0deg) scaleX(1.000); }
+}
+@keyframes bg-tumble-2 {
+  0% { transform: translate(0.0px, -90px) rotate(-0.0deg) scaleX(1.000); }
+  2.78% { transform: translate(32.5px, -57px) rotate(-20.0deg) scaleX(0.910); }
+  5.56% { transform: translate(56.3px, -24px) rotate(-40.0deg) scaleX(0.663); }
+  8.33% { transform: translate(65.0px, 8px) rotate(-60.0deg) scaleX(0.325); }
+  11.11% { transform: translate(56.3px, 41px) rotate(-80.0deg) scaleX(-0.012); }
+  13.89% { transform: translate(32.5px, 74px) rotate(-100.0deg) scaleX(-0.260); }
+  16.67% { transform: translate(0.0px, 107px) rotate(-120.0deg) scaleX(-0.350); }
+  19.44% { transform: translate(-32.5px, 139px) rotate(-140.0deg) scaleX(-0.260); }
+  22.22% { transform: translate(-56.3px, 172px) rotate(-160.0deg) scaleX(-0.013); }
+  25% { transform: translate(-65.0px, 205px) rotate(-180.0deg) scaleX(0.325); }
+  27.78% { transform: translate(-56.3px, 238px) rotate(-200.0deg) scaleX(0.663); }
+  30.56% { transform: translate(-32.5px, 271px) rotate(-220.0deg) scaleX(0.910); }
+  33.33% { transform: translate(-0.0px, 303px) rotate(-240.0deg) scaleX(1.000); }
+  36.11% { transform: translate(32.5px, 336px) rotate(-260.0deg) scaleX(0.910); }
+  38.89% { transform: translate(56.3px, 369px) rotate(-280.0deg) scaleX(0.663); }
+  41.67% { transform: translate(65.0px, 402px) rotate(-300.0deg) scaleX(0.325); }
+  44.44% { transform: translate(56.3px, 434px) rotate(-320.0deg) scaleX(-0.012); }
+  47.22% { transform: translate(32.5px, 467px) rotate(-340.0deg) scaleX(-0.260); }
+  50% { transform: translate(0.0px, 500px) rotate(-360.0deg) scaleX(-0.350); }
+  52.78% { transform: translate(-32.5px, 533px) rotate(-380.0deg) scaleX(-0.260); }
+  55.56% { transform: translate(-56.3px, 566px) rotate(-400.0deg) scaleX(-0.012); }
+  58.33% { transform: translate(-65.0px, 598px) rotate(-420.0deg) scaleX(0.325); }
+  61.11% { transform: translate(-56.3px, 631px) rotate(-440.0deg) scaleX(0.663); }
+  63.89% { transform: translate(-32.5px, 664px) rotate(-460.0deg) scaleX(0.910); }
+  66.67% { transform: translate(-0.0px, 697px) rotate(-480.0deg) scaleX(1.000); }
+  69.44% { transform: translate(32.5px, 729px) rotate(-500.0deg) scaleX(0.910); }
+  72.22% { transform: translate(56.3px, 762px) rotate(-520.0deg) scaleX(0.662); }
+  75% { transform: translate(65.0px, 795px) rotate(-540.0deg) scaleX(0.325); }
+  77.78% { transform: translate(56.3px, 828px) rotate(-560.0deg) scaleX(-0.012); }
+  80.56% { transform: translate(32.5px, 861px) rotate(-580.0deg) scaleX(-0.260); }
+  83.33% { transform: translate(0.0px, 893px) rotate(-600.0deg) scaleX(-0.350); }
+  86.11% { transform: translate(-32.5px, 926px) rotate(-620.0deg) scaleX(-0.260); }
+  88.89% { transform: translate(-56.3px, 959px) rotate(-640.0deg) scaleX(-0.013); }
+  91.67% { transform: translate(-65.0px, 992px) rotate(-660.0deg) scaleX(0.325); }
+  94.44% { transform: translate(-56.3px, 1024px) rotate(-680.0deg) scaleX(0.663); }
+  97.22% { transform: translate(-32.5px, 1057px) rotate(-700.0deg) scaleX(0.910); }
+  100% { transform: translate(-0.0px, 1090px) rotate(-720.0deg) scaleX(1.000); }
+}
+@keyframes bg-tumble-3 {
+  0% { transform: translate(0.0px, -90px) rotate(0.0deg) scaleX(1.000); }
+  2.78% { transform: translate(45.0px, -57px) rotate(25.0deg) scaleX(0.910); }
+  5.56% { transform: translate(77.9px, -24px) rotate(50.0deg) scaleX(0.663); }
+  8.33% { transform: translate(90.0px, 8px) rotate(75.0deg) scaleX(0.325); }
+  11.11% { transform: translate(77.9px, 41px) rotate(100.0deg) scaleX(-0.012); }
+  13.89% { transform: translate(45.0px, 74px) rotate(125.0deg) scaleX(-0.260); }
+  16.67% { transform: translate(0.0px, 107px) rotate(150.0deg) scaleX(-0.350); }
+  19.44% { transform: translate(-45.0px, 139px) rotate(175.0deg) scaleX(-0.260); }
+  22.22% { transform: translate(-77.9px, 172px) rotate(200.0deg) scaleX(-0.013); }
+  25% { transform: translate(-90.0px, 205px) rotate(225.0deg) scaleX(0.325); }
+  27.78% { transform: translate(-77.9px, 238px) rotate(250.0deg) scaleX(0.663); }
+  30.56% { transform: translate(-45.0px, 271px) rotate(275.0deg) scaleX(0.910); }
+  33.33% { transform: translate(-0.0px, 303px) rotate(300.0deg) scaleX(1.000); }
+  36.11% { transform: translate(45.0px, 336px) rotate(325.0deg) scaleX(0.910); }
+  38.89% { transform: translate(77.9px, 369px) rotate(350.0deg) scaleX(0.663); }
+  41.67% { transform: translate(90.0px, 402px) rotate(375.0deg) scaleX(0.325); }
+  44.44% { transform: translate(77.9px, 434px) rotate(400.0deg) scaleX(-0.012); }
+  47.22% { transform: translate(45.0px, 467px) rotate(425.0deg) scaleX(-0.260); }
+  50% { transform: translate(0.0px, 500px) rotate(450.0deg) scaleX(-0.350); }
+  52.78% { transform: translate(-45.0px, 533px) rotate(475.0deg) scaleX(-0.260); }
+  55.56% { transform: translate(-77.9px, 566px) rotate(500.0deg) scaleX(-0.012); }
+  58.33% { transform: translate(-90.0px, 598px) rotate(525.0deg) scaleX(0.325); }
+  61.11% { transform: translate(-77.9px, 631px) rotate(550.0deg) scaleX(0.663); }
+  63.89% { transform: translate(-45.0px, 664px) rotate(575.0deg) scaleX(0.910); }
+  66.67% { transform: translate(-0.0px, 697px) rotate(600.0deg) scaleX(1.000); }
+  69.44% { transform: translate(45.0px, 729px) rotate(625.0deg) scaleX(0.910); }
+  72.22% { transform: translate(77.9px, 762px) rotate(650.0deg) scaleX(0.662); }
+  75% { transform: translate(90.0px, 795px) rotate(675.0deg) scaleX(0.325); }
+  77.78% { transform: translate(77.9px, 828px) rotate(700.0deg) scaleX(-0.012); }
+  80.56% { transform: translate(45.0px, 861px) rotate(725.0deg) scaleX(-0.260); }
+  83.33% { transform: translate(0.0px, 893px) rotate(750.0deg) scaleX(-0.350); }
+  86.11% { transform: translate(-45.0px, 926px) rotate(775.0deg) scaleX(-0.260); }
+  88.89% { transform: translate(-77.9px, 959px) rotate(800.0deg) scaleX(-0.013); }
+  91.67% { transform: translate(-90.0px, 992px) rotate(825.0deg) scaleX(0.325); }
+  94.44% { transform: translate(-77.9px, 1024px) rotate(850.0deg) scaleX(0.663); }
+  97.22% { transform: translate(-45.0px, 1057px) rotate(875.0deg) scaleX(0.910); }
+  100% { transform: translate(-0.0px, 1090px) rotate(900.0deg) scaleX(1.000); }
+}
+
+/* ---------- Stars and glints ---------------------------------------------------------------- */
+
+/* Stars twinkle in a few groups (one animation per group, not per star), each with its own rhythm. */
+.themed-background .twinkle-group {
+  animation: bg-twinkle var(--twinkle-duration, 3s) ease-in-out var(--twinkle-delay, 0s) infinite alternate;
+}
+
+@keyframes bg-twinkle {
+  from { opacity: 0.15; }
+  to { opacity: 1; }
+}
+
+/* ---------- Windows ------------------------------------------------------------------------- */
+
+.themed-background .window-pane { fill: var(--window-off, #3B3F63); }
+.themed-background .window-light { fill: var(--window-on, #FFD27A); }
+.themed-background .window-frame {
+  fill: none;
+  stroke: var(--window-frame, #5B3A29);
+  stroke-width: 3;
+}
+
+/* Lights are switched on and off with a slow, smooth fade; each window has its own delay/cycle. */
+.themed-background .window-lit {
+  animation: bg-window-toggle var(--window-cycle, 16s) ease-in-out var(--window-delay, 0s) infinite;
+}
+
+.themed-background .window--steady .window-lit {
+  animation: bg-window-flicker 3.2s ease-in-out var(--window-delay, 0s) infinite alternate;
+}
+
+@keyframes bg-window-toggle {
+  0%, 42% { opacity: 1; }
+  48%, 70% { opacity: 0; }
+  76%, 100% { opacity: 1; }
+}
+
+/* Fireplace-like glow. */
+@keyframes bg-window-flicker {
+  0% { opacity: 1; }
+  30% { opacity: 0.82; }
+  55% { opacity: 0.95; }
+  80% { opacity: 0.78; }
+  100% { opacity: 1; }
+}
+
+/* ---------- Wind, drifting clouds, smoke ------------------------------------------------------ */
+
+/*
+ * Note for all the keyframes below: they only contain plain values (no CSS variables).
+ * Variables inside keyframes have to be re-resolved for every element each time the main thread
+ * draws a frame, which made the scenes much more expensive. Amounts are chosen with variant classes;
+ * durations and delays can still come from variables (they are not part of the keyframes).
+ */
+
+/* Trees, flowers, scarves... rotate gently around their base (origin set inline). */
+.themed-background .sway {
+  animation: bg-sway-gentle var(--sway-duration, 6s) ease-in-out var(--sway-delay, 0s) infinite alternate;
+}
+.themed-background .sway--medium { animation-name: bg-sway-medium; }
+.themed-background .sway--strong { animation-name: bg-sway-strong; }
+
+@keyframes bg-sway-gentle {
+  from { transform: rotate(-1deg); }
+  to { transform: rotate(1deg); }
+}
+
+@keyframes bg-sway-medium {
+  from { transform: rotate(-3.5deg); }
+  to { transform: rotate(3.5deg); }
+}
+
+@keyframes bg-sway-strong {
+  from { transform: rotate(-8deg); }
+  to { transform: rotate(8deg); }
+}
+
+/* Clouds (and the sailboat) slowly drift back and forth: short (60px) or long (140px) trips. */
+.themed-background .drift {
+  animation: bg-drift-short var(--drift-duration, 60s) ease-in-out var(--drift-delay, 0s) infinite alternate;
+}
+.themed-background .drift--long { animation-name: bg-drift-long; }
+.themed-background .drift--reverse { animation-direction: alternate-reverse; }
+
+@keyframes bg-drift-short {
+  from { transform: translateX(-60px); }
+  to { transform: translateX(60px); }
+}
+
+@keyframes bg-drift-long {
+  from { transform: translateX(-140px); }
+  to { transform: translateX(140px); }
+}
+
+/* Chimney smoke puffs: rise, grow and fade away. */
+.themed-background .smoke-puff {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: bg-smoke var(--smoke-duration, 6s) ease-out var(--smoke-delay, 0s) infinite;
+}
+
+@keyframes bg-smoke {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.4); }
+  15% { opacity: 0.7; }
+  100% { opacity: 0; transform: translate(40px, -140px) scale(1.8); }
+}
+
+/* Soft pulsing glow (sun, moon, lamps). */
+.themed-background .pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bg-pulse var(--pulse-duration, 6s) ease-in-out infinite alternate;
+}
+
+@keyframes bg-pulse {
+  from { opacity: 0.65; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1.04); }
+}
+
+/* ---------- Flying creatures (birds, bats, butterflies) ----------------------------------------- */
+
+/* Crosses the whole scene from left to right (or right to left with .flyer--reverse), level, climbing or descending. */
+.themed-background .flyer {
+  animation: bg-fly var(--fly-duration, 30s) linear var(--fly-delay, 0s) infinite;
+}
+.themed-background .flyer--climb { animation-name: bg-fly-climb; }
+.themed-background .flyer--descend { animation-name: bg-fly-descend; }
+.themed-background .flyer--reverse { animation-name: bg-fly-reverse; }
+.themed-background .flyer--reverse.flyer--climb { animation-name: bg-fly-reverse-climb; }
+.themed-background .flyer--reverse.flyer--descend { animation-name: bg-fly-reverse-descend; }
+
+@keyframes bg-fly { from { transform: translate(-250px, 0); } to { transform: translate(1850px, 0); } }
+@keyframes bg-fly-climb { from { transform: translate(-250px, 0); } to { transform: translate(1850px, -80px); } }
+@keyframes bg-fly-descend { from { transform: translate(-250px, 0); } to { transform: translate(1850px, 80px); } }
+@keyframes bg-fly-reverse { from { transform: translate(1850px, 0); } to { transform: translate(-250px, 0); } }
+@keyframes bg-fly-reverse-climb { from { transform: translate(1850px, 0); } to { transform: translate(-250px, -80px); } }
+@keyframes bg-fly-reverse-descend { from { transform: translate(1850px, 0); } to { transform: translate(-250px, 80px); } }
+
+/* Up and down floating (flight, boats, ghosts): small (8px), medium (16px) or large (30px). */
+.themed-background .bob {
+  animation: bg-bob-medium var(--bob-duration, 3s) ease-in-out var(--bob-delay, 0s) infinite alternate;
+}
+.themed-background .bob--small { animation-name: bg-bob-small; }
+.themed-background .bob--large { animation-name: bg-bob-large; }
+
+@keyframes bg-bob-small { from { transform: translateY(-8px); } to { transform: translateY(8px); } }
+@keyframes bg-bob-medium { from { transform: translateY(-16px); } to { transform: translateY(16px); } }
+@keyframes bg-bob-large { from { transform: translateY(-30px); } to { transform: translateY(30px); } }
+
+/* Wing beat: the wings fold down past the body. */
+.themed-background .flap {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bg-flap var(--flap-duration, 0.35s) ease-in-out var(--flap-delay, 0s) infinite alternate;
+}
+
+@keyframes bg-flap {
+  from { transform: scaleY(1); }
+  to { transform: scaleY(-0.55); }
+}
+
+/* Butterfly wings close sideways instead. */
+.themed-background .flutter {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bg-flutter var(--flap-duration, 0.25s) ease-in-out var(--flap-delay, 0s) infinite alternate;
+}
+
+@keyframes bg-flutter {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0.2); }
+}
+
+/* ---------- Rotating parts (windmill blades, sun rays) ---------------------------------------- */
+
+.themed-background .rotate {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bg-spin var(--spin-duration, 20s) linear infinite;
+}
+
+@keyframes bg-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Sea waves: a repeated pattern (period of 120px) scrolled by one period ------------------ */
+
+.themed-background .wave-scroll {
+  animation: bg-wave-scroll var(--wave-duration, 8s) linear infinite;
+}
+
+@keyframes bg-wave-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-120px); }
+}
