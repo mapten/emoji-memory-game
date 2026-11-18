@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 // Styles
@@ -18,6 +18,8 @@ type Props = {
  */
 export const Card = ({emoji, initialShowBack = true, disabled, onClick}: Props) => {
   const [showBack, setShowBack] = useState(true);
+  // React 19 removed findDOMNode, so CSSTransition needs an explicit ref to the animated node.
+  const nodeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setShowBack(initialShowBack);
@@ -35,8 +37,9 @@ export const Card = ({emoji, initialShowBack = true, disabled, onClick}: Props) 
         in={showBack}
         timeout={300}
         classNames='flip'
+        nodeRef={nodeRef}
       >
-        <button data-state={showBack ? 'back' : 'front'} disabled={disabled} className={'card relative shadow lg:shadow-xl select-none rounded-xl ' + 
+        <button ref={nodeRef} data-state={showBack ? 'back' : 'front'} disabled={disabled} className={'card relative shadow lg:shadow-xl select-none rounded-xl ' + 
           'h-14 md:h-20 lg:h-24 xl:h-32 ' +
           'w-14 md:w-20 lg:w-24 xl:w-32'}
         onClick={handleCardClick}> 
