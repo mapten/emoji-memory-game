@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import * as arrayUtils from '../../../utils/array.utils';
 
 import { render, fireEvent, screen, act, within } from '@testing-library/react';

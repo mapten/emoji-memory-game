@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { fn } from 'storybook/test';
 
 // Components
 import { Card } from '../../components/presentational/Card/Card';
@@ -16,6 +17,7 @@ export const Default = {
   args: {
     emoji: '🦄',
     disabled: false,
+    onClick: fn(),
   },
 } satisfies Story;
 

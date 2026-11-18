@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 // Components
 import { MoveCounter } from '../../components/presentational/MoveCounter/MoveCounter';
