@@ -1,69 +1,98 @@
-# Memory Game
+# 🎄 Emoji Memory Game
 
-Who hasn't played card games at some point? From a very young age to a beer night with friends, right?
+A Christmas-themed take on the classic [Concentration](https://en.wikipedia.org/wiki/Concentration_(card_game)) card game, built with React, TypeScript and Tailwind CSS.
 
-Well, for this Challenge you will have to choose your favourite theme and recreate
-the [famous game](https://en.wikipedia.org/wiki/Concentration_(card_game)).
+Flip the cards, find all the emoji pairs and beat the clock!
 
-![Brais Moure Challenge card](moure_memory-game.png)
+## How to play
 
-> This is a challenge created by [MoureDev](https://www.twitch.tv/mouredev). He will review and give feedback to some
-> proposed solutions from the community in one of his Twitch livestreams 😻 
+1. Press **Start game** on the home screen.
+2. Pick a difficulty:
 
-**Surprise us! 😉**
+   | Level     | Board | Pairs |
+   |-----------|-------|-------|
+   | Easy      | 4 × 4 | 8     |
+   | Medium    | 4 × 6 | 12    |
+   | Difficult | 5 × 6 | 15    |
 
-## How it works?
+3. Tap a card to turn it over, then tap a second one.
+   - If they match, they stay face up.
+   - If not, they flip back after a short delay.
+4. Reveal every pair before the **60-second** countdown runs out to win.
 
-The requirements for the game are pretty simple. First, you have to choose whatever theme you want to, like
-Pokémon, Star Wars or even Peppa Pig!
+The game panel shows:
 
-The dynamics of the game will consist of presenting a board with a series of face-down cards and revealing all the pairs
-before the time is up. The user will tap on each card to turn it over and, if two of them match when they are uncovered,
-they will be turned face up. If not, they will be hidden again.
+- ⏱️ **Time counter**: the countdown.
+- 🔁 **Move counter**: goes up by one each time two cards are turned over, whether they match or not.
+- 🧩 **Remaining pairs**: pairs still to be found.
+- Buttons to **start again**, **show the solution**, or **go back** to level selection.
 
-**The game is won if all pairs are uncovered within the time limit.**
+The board switches between landscape and portrait layouts to fit the screen.
 
-So, the game will have an initial screen to select one of the three difficulties and 1 minute to solve each board:
+## Tech stack
 
-* Easy: 4x4 board
-* Medium: 4x6 board (or 6x4 depending on the screen)
-* Difficult: 5x6 board (or 6x5 depending on screen)
+- [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/) for development and builds
+- [React Router](https://reactrouter.com/) for navigation
+- [Tailwind CSS](https://tailwindcss.com/) for styling
+- [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) for tests
+- [Storybook](https://storybook.js.org/) for building and documenting components
 
-The application will have a main game screen that contains the following elements:
+## Getting started
 
-* Game board. The board where the user will play and see the cards.
-* Move counter. Every time 2 cards are turned over it will increase by 1, whether you hit or not.
-* Time counter. A 1-min countdown to reveal all pairs!
-* Remaining pairs counter.
-* A button to return to the level selection screen.
+Requirements: [Node.js](https://nodejs.org/) 18+ and [pnpm](https://pnpm.io/).
 
-## Technical requirements
+```bash
+pnpm install
+pnpm dev
+```
 
-* Create a **clean**, **maintainable** and **well-designed** code. We expect to see a good and clear architecture that
-  allows to add or modify the solution without so much troubles.
-* **Test** your code until you are comfortable with it. We don't expect a 100% of Code Coverage but some tests that
-  helps to have a more stable and confident base code.
+Then open the URL that Vite prints (by default http://localhost:5173).
 
-To understand how you take decisions during the implementation, **please write a COMMENTS.md** file explaining some of
-the most important parts of the application. You would also be able to defend your code through
-[Rviewer](https://rviewer.io), once you submit your solution.
+## Scripts
 
----
+| Command                | Description                               |
+|------------------------|-------------------------------------------|
+| `pnpm dev`             | Start the development server              |
+| `pnpm build`           | Type-check and build for production       |
+| `pnpm preview`         | Serve the production build locally        |
+| `pnpm test`            | Run unit tests in watch mode              |
+| `pnpm test --run`      | Run unit tests once                       |
+| `pnpm lint`            | Lint the codebase with ESLint             |
+| `pnpm storybook`       | Start Storybook on http://localhost:6006  |
+| `pnpm build-storybook` | Build a static Storybook                  |
 
-## How to submit your solution
+## Project structure
 
-* Push your code to the `devel` branch - we encourage you to commit regularly to show your thinking process was.
-* **Create a new Pull Request** to `main` branch & **merge it**.
+```
+src/
+├── components/
+│   ├── containers/     # Screens with state and logic (Home, DifficultyLevelSelector, Game)
+│   ├── presentational/ # Game-specific components that only render props (Card, GamePanel, TimeCounter, ...)
+│   └── ui/             # Generic, reusable building blocks (Button, Modal)
+├── configuration/      # Game settings: emojis, levels, time limit, flip-back delay
+├── hooks/              # Custom hooks (useScreenOrientation)
+├── models/             # TypeScript interfaces
+├── stories/            # Storybook stories (atoms, molecules, organisms, pages)
+└── utils/              # Helpers (array shuffling and sampling)
+```
 
-Once merged you **won't be able to change or add** anything to your solution, so double-check that everything is as you
-expected!
+## Configuration
 
-Remember that **there is no countdown**, so take your time and implement a solution that you are proud!
+All game settings live in [`src/configuration/game.configuration.ts`](src/configuration/game.configuration.ts):
 
---- 
+- `emojis`: the set of emojis cards are drawn from (it needs at least as many emojis as the largest level has pairs).
+- `levels`: each level's name and board size.
+- `gameConfiguration.timeLimit`: game duration, in seconds.
+- `gameConfiguration.flipBackTime`: how long mismatched cards stay visible, in milliseconds.
 
-<p align="center">
-  If you have any feedback or problem, <a href="mailto:help@rviewer.io">let us know!</a> 🤘
-  <br><br>
-  Made with ❤️ by <a href="https://rviewer.io">Rviewer</a>
-</p>
+To change the theme, swap the emoji list. To add a difficulty, add an entry to `levels`.
+
+## Credits
+
+- Originally built as a solution to the [MoureDev](https://www.twitch.tv/mouredev) × [Rviewer](https://rviewer.io) Memory Game challenge.
+- Font: *Chiki*.
+
+## License
+
+[MIT](LICENSE) © mapten
